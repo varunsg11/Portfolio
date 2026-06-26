@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+python-multipart
+resend
+python-dotenv
+pydantic[email]
