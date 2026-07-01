@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Project — Architecture & Learning Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --accent: #e63946;
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #666666;
+    --border: #e5e5e5;
+    --code-bg: #f5f5f5;
+    --tag-bg: #fff0f0;
+    --tag-color: #c1121f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 48px;
+  }
+
+  /* COVER */
+  .cover {
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 32px;
+    margin-bottom: 56px;
+  }
+  .cover-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .cover h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .cover p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+  }
+  .cover-meta {
+    margin-top: 24px;
+    display: flex;
+    gap: 32px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .cover-meta strong { color: var(--text); }
+
+  /* SECTIONS */
+  h2 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    margin-top: 48px;
+    color: var(--text);
+  }
+  h2:first-of-type { margin-top: 0; }
+
+  .section-sub {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+    margin-top: 48px;
+  }
+  .section-sub:first-of-type { margin-top: 0; }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    margin-top: 28px;
+  }
+
+  p { color: #333; margin-bottom: 12px; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ARCHITECTURE BOX */
+  .arch-box {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.9;
+    margin: 20px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+
+  .arch-accent { color: var(--accent); font-weight: 600; }
+  .arch-muted  { color: #999; }
+
+  /* SERVICE CARDS */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .service-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .service-card .svc-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .svc-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--tag-color);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .service-card p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .service-card .svc-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* FILE TREE */
+  .file-tree {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 2.1;
+    margin: 16px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .ft-folder { color: #666; font-weight: 600; }
+  .ft-file   { color: #111; }
+  .ft-note   { color: #999; font-size: 11px; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #111;
+    color: #f0f0f0;
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 2;
+    margin: 16px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+  .code-block .kw  { color: #ff79c6; }
+  .code-block .fn  { color: #50fa7b; }
+  .code-block .str { color: #f1fa8c; }
+  .code-block .cm  { color: #6272a4; }
+  .code-block .dec { color: #8be9fd; }
+
+  /* FLOW STEPS */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+    position: relative;
+  }
+  .flow-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    position: relative;
+    padding-bottom: 24px;
+  }
+  .flow-item:last-child { padding-bottom: 0; }
+  .flow-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .flow-body h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .flow-body p  { font-size: 12px; color: var(--muted); margin-bottom: 0; }
+  .flow-connector {
+    position: absolute;
+    left: 14px;
+    top: 30px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .flow-item:last-child .flow-connector { display: none; }
+
+  /* LEARN TABLE */
+  .learn-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .learn-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .learn-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: #333;
+  }
+  .learn-table tr:last-child td { border-bottom: none; }
+  .priority {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+  .p-high   { background: #fff0f0; color: #c1121f; }
+  .p-med    { background: #fff7e6; color: #b45309; }
+  .p-low    { background: #f0fdf4; color: #166534; }
+
+  /* PRINT */
+  @media print {
+    body { padding: 32px 40px; }
+    .cover { min-height: auto; }
+    h2 { page-break-before: auto; }
+    .arch-box, .code-block, .file-tree { page-break-inside: avoid; }
+    .services-grid { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <p class="cover-tag">Technical Documentation</p>
+  <h1>Portfolio Project<br>Architecture & Guide</h1>
+  <p>A complete breakdown of the codebase, services, data flow, and what to learn next — written for Varun Sadashive Gowda.</p>
+  <div class="cover-meta">
+    <div><strong>Stack</strong><br>HTML · CSS · JS · FastAPI · Python</div>
+    <div><strong>Hosting</strong><br>Netlify (frontend) · Render (backend)</div>
+    <div><strong>Email</strong><br>Resend API</div>
+    <div><strong>Version Control</strong><br>GitHub</div>
+  </div>
+</div>
+
+<!-- 1. ARCHITECTURE -->
+<p class="section-sub">Section 01</p>
+<h2>Overall Architecture</h2>
+<p>The project is split into two independent parts — a static frontend and a Python backend. They communicate over HTTP. This is called a <strong>decoupled architecture</strong>.</p>
+
+<div class="arch-box"><span class="arch-accent">┌─────────────────────────────────────────────────────────────┐</span>
+<span class="arch-accent">│                        USER'S BROWSER                       │</span>
+<span class="arch-accent">└───────────────────────────┬─────────────────────────────────┘</span>
+                            │  visits URL
+                            ▼
+<span class="arch-accent">┌───────────────────────────────────────────────────────────┐</span>
+<span class="arch-accent">│                  NETLIFY  (Frontend Host)                  │</span>
+│              serves index.html + style.css + script.js     │
+<span class="arch-accent">└───────────────────────────┬───────────────────────────────┘</span>
+                            │
+          ┌─────────────────┴────────────────┐
+          │  contact form POST               │  resume download GET
+          ▼                                  ▼
+<span class="arch-accent">┌─────────────────────────────────────────────────────────┐</span>
+<span class="arch-accent">│              RENDER  (Backend Host)                      │</span>
+│              FastAPI  ·  Python  ·  uvicorn              │
+│                                                          │
+│   /api/contact  ──►  validates  ──►  Resend API          │
+│   /resume       ──►  serves PDF file                     │
+│   /health       ──►  returns {"status":"ok"}             │
+<span class="arch-accent">└────────────────────────────┬────────────────────────────┘</span>
+                             │
+                             ▼
+<span class="arch-accent">          ┌──────────────────────────────┐</span>
+<span class="arch-accent">          │   RESEND  (Email Service)     │</span>
+          │   delivers email to Gmail     │
+<span class="arch-accent">          └──────────────────────────────┘</span></div>
+
+<hr class="divider">
+
+<!-- 2. FILE STRUCTURE -->
+<p class="section-sub">Section 02</p>
+<h2>Codebase — File by File</h2>
+
+<div class="file-tree"><span class="ft-folder">portfolio/</span>
+├── <span class="ft-folder">frontend/</span>
+│   ├── <span class="ft-file">index.html</span>    <span class="ft-note">← entire page structure (all sections, HTML only)</span>
+│   ├── <span class="ft-file">style.css</span>     <span class="ft-note">← all visual design (colors, layout, animations)</span>
+│   └── <span class="ft-file">script.js</span>     <span class="ft-note">← interactivity (nav, scroll animations, form submit)</span>
+│
+├── <span class="ft-folder">backend/</span>
+│   ├── <span class="ft-file">main.py</span>       <span class="ft-note">← FastAPI app (all endpoints live here)</span>
+│   ├── <span class="ft-file">requirements.txt</span> <span class="ft-note">← Python packages list (Render reads this)</span>
+│   ├── <span class="ft-file">.env</span>          <span class="ft-note">← secret keys (NEVER commit this to GitHub)</span>
+│   └── <span class="ft-folder">venv/</span>         <span class="ft-note">← local Python environment (never commit)</span>
+│
+├── <span class="ft-folder">assets/</span>
+│   ├── <span class="ft-file">me.jpg</span>        <span class="ft-note">← profile photo</span>
+│   └── <span class="ft-file">Varun_237008771.pdf</span>  <span class="ft-note">← resume (served by backend)</span>
+│
+└── <span class="ft-file">.gitignore</span>        <span class="ft-note">← tells git what NOT to push (venv, .env)</span></div>
+
+<h3>What each frontend file does</h3>
+<p><strong>index.html</strong> — The skeleton. Every section (hero, about, experience, etc.) is written as HTML here. It links to style.css and script.js. Think of it as the bones.</p>
+<p><strong>style.css</strong> — The appearance. Colors, fonts, spacing, animations, responsive breakpoints. Uses CSS custom properties (<code>--accent</code>, <code>--bg</code> etc.) defined in <code>:root</code> so one change updates the whole site.</p>
+<p><strong>script.js</strong> — The behaviour. Three jobs: (1) fade-up scroll animations using IntersectionObserver, (2) mobile hamburger nav toggle, (3) contact form — intercepts submit, POSTs JSON to the backend, shows success/error.</p>
+
+<h3>What main.py does</h3>
+<p><strong>main.py</strong> — The entire backend in one file. Three endpoints:</p>
+<ul style="padding-left:20px; color:#333; font-size:13px; line-height:2;">
+  <li><code>POST /api/contact</code> — receives form data, validates it with Pydantic, sends email via Resend</li>
+  <li><code>GET /resume</code> — serves the PDF file as a download</li>
+  <li><code>GET /health</code> — returns OK (used to check if server is running)</li>
+</ul>
+
+<hr class="divider">
+
+<!-- 3. CODE FLOW -->
+<p class="section-sub">Section 03</p>
+<h2>Contact Form — End to End Flow</h2>
+<p>When someone fills in the contact form and clicks Send, here is exactly what happens step by step:</p>
+
+<div class="flow">
+  <div class="flow-item">
+    <div class="flow-num">1</div>
+    <div class="flow-body">
+      <h4>User clicks Send</h4>
+      <p>script.js intercepts the form submit event with <code>e.preventDefault()</code> — this stops the page from refreshing, which is the browser's default behaviour.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">2</div>
+    <div class="flow-body">
+      <h4>JavaScript builds a JSON payload</h4>
+      <p>Reads the form field values (name, email, subject, message) and packages them as a JSON object.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">3</div>
+    <div class="flow-body">
+      <h4>fetch() sends a POST request to Render</h4>
+      <p>The browser makes an HTTP POST request to <code>https://portfolio-9s06.onrender.com/api/contact</code> with the JSON in the request body.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">4</div>
+    <div class="flow-body">
+      <h4>FastAPI receives the request</h4>
+      <p>The <code>/api/contact</code> endpoint is triggered. Pydantic automatically validates the data — checks email format, checks no fields are empty. If invalid, returns a 422 error immediately.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">5</div>
+    <div class="flow-body">
+      <h4>Backend calls Resend API</h4>
+      <p>FastAPI calls Resend's API with your API key, the sender address, your Gmail as recipient, and an HTML email body containing the message.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">6</div>
+    <div class="flow-body">
+      <h4>Resend delivers the email</h4>
+      <p>Resend's servers send the email to varunsg118@gmail.com. FastAPI returns <code>{"message": "Sent"}</code> to the browser.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">7</div>
+    <div class="flow-body">
+      <h4>Frontend shows success message</h4>
+      <p>script.js reads the response, sees status 200, and shows the green "Message sent!" banner. If anything failed, shows the red error banner instead.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 4. KEY CODE EXPLAINED -->
+<p class="section-sub">Section 04</p>
+<h2>Key Code Explained</h2>
+
+<h3>FastAPI endpoint — how it works</h3>
+<div class="code-block"><span class="cm"># Pydantic model — defines what data the endpoint expects</span>
+<span class="kw">class</span> <span class="dec">ContactForm</span>(BaseModel):
+    name: str
+    email: EmailStr   <span class="cm"># EmailStr auto-validates email format</span>
+    subject: str
+    message: str
+
+<span class="cm"># The endpoint itself</span>
+<span class="dec">@app.post</span>(<span class="str">"/api/contact"</span>)          <span class="cm"># decorator: binds URL + HTTP method</span>
+<span class="kw">async def</span> <span class="fn">contact</span>(form: ContactForm): <span class="cm"># FastAPI auto-parses JSON → ContactForm</span>
+    resend.api_key = os.getenv(<span class="str">"RESEND_API_KEY"</span>)
+    resend.Emails.send({...})          <span class="cm"># call Resend</span>
+    <span class="kw">return</span> {<span class="str">"message"</span>: <span class="str">"Sent"</span>}         <span class="cm"># auto-serialized to JSON</span></div>
+
+<h3>IntersectionObserver — how scroll animations work</h3>
+<div class="code-block"><span class="cm">// Watches elements. Fires when they enter the viewport.</span>
+<span class="kw">const</span> observer = <span class="kw">new</span> <span class="fn">IntersectionObserver</span>((entries) => {
+    entries.<span class="fn">forEach</span>(entry => {
+        <span class="kw">if</span> (entry.isIntersecting) {
+            entry.target.classList.<span class="fn">add</span>(<span class="str">'visible'</span>); <span class="cm">// triggers CSS transition</span>
+            observer.<span class="fn">unobserve</span>(entry.target);    <span class="cm">// stop watching once done</span>
+        }
+    });
+}, { threshold: 0.12 }); <span class="cm">// fires when 12% of element is visible</span>
+
+<span class="cm">// CSS does the actual animation:</span>
+<span class="cm">// .fade-up         { opacity:0; transform:translateY(28px); transition:... }</span>
+<span class="cm">// .fade-up.visible { opacity:1; transform:translateY(0); }</span></div>
+
+<h3>CSS Custom Properties — why they matter</h3>
+<div class="code-block"><span class="cm">/* Define once in :root */</span>
+:root {
+    --accent: #e63946;
+    --bg:     #0a0a0a;
+    --text:   #f5f5f5;
+}
+
+<span class="cm">/* Use anywhere — change --accent once, updates entire site */</span>
+.btn-primary  { background: var(--accent); }
+.section-label { color: var(--accent); }
+.ring-fill    { stroke: var(--accent); }</div>
+
+<hr class="divider">
+
+<!-- 5. SERVICES -->
+<p class="section-sub">Section 05</p>
+<h2>Services Used</h2>
+
+<div class="services-grid">
+  <div class="service-card">
+    <div class="svc-name">GitHub <span class="svc-badge">Version Control</span></div>
+    <p>Stores your code. Every push triggers a redeploy on Netlify and Render automatically.</p>
+    <div class="svc-url">github.com/varunsg11/Portfolio</div>
+  </div>
+  <div class="service-card">
+    <div class="svc-name">Render <span class="svc-badge">Backend Host</span></div>
+    <p>Runs your FastAPI server. Free tier spins down after 15 min inactivity — first request is slow (cold start).</p>
+    <div class="svc-url">portfolio-9s06.onrender.com</div>
+  </div>
+  <div class="service-card">
+    <div class="svc-name">Netlify <span class="svc-badge">Frontend Host</span></div>
+    <p>Serves your HTML/CSS/JS files globally via CDN. Deploys automatically when you push to GitHub.</p>
+    <div class="svc-url">pending deployment</div>
+  </div>
+  <div class="service-card">
+    <div class="svc-name">Resend <span class="svc-badge">Email API</span></div>
+    <p>Sends emails from your backend when someone submits the contact form. Free tier: 3,000 emails/month.</p>
+    <div class="svc-url">resend.com</div>
+  </div>
+  <div class="service-card">
+    <div class="svc-name">Google Fonts <span class="svc-badge">Typography</span></div>
+    <p>Loads the Inter font family used across the entire site. Loaded via a &lt;link&gt; tag in the HTML head.</p>
+    <div class="svc-url">fonts.googleapis.com</div>
+  </div>
+  <div class="service-card">
+    <div class="svc-name">Font Awesome <span class="svc-badge">Icons</span></div>
+    <p>Icon library used for all icons (LinkedIn, GitHub, envelope, arrow, etc). Loaded via CDN.</p>
+    <div class="svc-url">cdnjs.cloudflare.com</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 6. WHAT TO LEARN -->
+<p class="section-sub">Section 06</p>
+<h2>What to Learn Next</h2>
+<p>Ordered by priority — learn these to understand what you built and extend it confidently.</p>
+
+<table class="learn-table">
+  <thead>
+    <tr>
+      <th>Topic</th>
+      <th>Why it matters for this project</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>HTTP & REST basics</strong><br><span style="font-size:11px;color:#666">GET, POST, status codes, headers, JSON</span></td>
+      <td>Your frontend and backend communicate via HTTP. Understanding this makes every bug obvious.</td>
+      <td><span class="priority p-high">High</span></td>
+    </tr>
+    <tr>
+      <td><strong>FastAPI fundamentals</strong><br><span style="font-size:11px;color:#666">routing, path params, Pydantic, async</span></td>
+      <td>You're running FastAPI but barely scratched the surface. Learn decorators, dependency injection, error handling.</td>
+      <td><span class="priority p-high">High</span></td>
+    </tr>
+    <tr>
+      <td><strong>CSS Flexbox & Grid</strong><br><span style="font-size:11px;color:#666">layout systems used throughout style.css</span></td>
+      <td>Almost every layout in the site uses flexbox or grid. Understanding these removes all frontend confusion.</td>
+      <td><span class="priority p-high">High</span></td>
+    </tr>
+    <tr>
+      <td><strong>JavaScript async/await</strong><br><span style="font-size:11px;color:#666">fetch, Promises, try/catch</span></td>
+      <td>The contact form uses async fetch. Understanding this pattern is fundamental to all modern JS.</td>
+      <td><span class="priority p-high">High</span></td>
+    </tr>
+    <tr>
+      <td><strong>Environment variables & secrets</strong><br><span style="font-size:11px;color:#666">.env, os.getenv(), Render env vars</span></td>
+      <td>You're already using this. Learn why secrets must never be hardcoded or committed to git.</td>
+      <td><span class="priority p-med">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Git fundamentals</strong><br><span style="font-size:11px;color:#666">init, add, commit, push, branches</span></td>
+      <td>You used git to deploy. Learn branching so you can develop features without breaking the live site.</td>
+      <td><span class="priority p-med">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>CORS</strong><br><span style="font-size:11px;color:#666">Cross-Origin Resource Sharing</span></td>
+      <td>FastAPI has <code>CORSMiddleware</code> enabled. Learn why — browsers block cross-origin requests by default.</td>
+      <td><span class="priority p-med">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>DNS & domains</strong><br><span style="font-size:11px;color:#666">A records, CNAME, nameservers</span></td>
+      <td>Next step for the project is buying a domain. Understanding DNS makes this painless.</td>
+      <td><span class="priority p-med">Medium</span></td>
+    </tr>
+    <tr>
+      <td><strong>Python virtual environments</strong><br><span style="font-size:11px;color:#666">venv, pip, requirements.txt</span></td>
+      <td>You created one but understand it conceptually — why isolation matters for every Python project.</td>
+      <td><span class="priority p-low">Later</span></td>
+    </tr>
+    <tr>
+      <td><strong>CI/CD pipelines</strong><br><span style="font-size:11px;color:#666">GitHub Actions, auto-deploy</span></td>
+      <td>Netlify and Render already do basic CI/CD for you. Learn GitHub Actions to add linting and tests.</td>
+      <td><span class="priority p-low">Later</span></td>
+    </tr>
+    <tr>
+      <td><strong>Docker basics</strong><br><span style="font-size:11px;color:#666">containers, Dockerfile, images</span></td>
+      <td>You reduced Docker image sizes at SAP. Understanding the fundamentals will be useful at TAMU.</td>
+      <td><span class="priority p-low">Later</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<!-- 7. NEXT STEPS -->
+<p class="section-sub">Section 07</p>
+<h2>Remaining To-Do</h2>
+
+<div class="flow">
+  <div class="flow-item">
+    <div class="flow-num">1</div>
+    <div class="flow-body">
+      <h4>Deploy frontend to Netlify</h4>
+      <p>netlify.com → New site → Import from GitHub → Root directory: <code>frontend</code> → Deploy.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">2</div>
+    <div class="flow-body">
+      <h4>Buy a domain</h4>
+      <p>Recommended: namecheap.com. Search for <code>varunssg.dev</code> or <code>varunsadashivegowda.com</code>. ~$12/year.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">3</div>
+    <div class="flow-body">
+      <h4>Point domain to Netlify</h4>
+      <p>In Netlify: Site settings → Domain management → Add custom domain. Then update DNS records at Namecheap to point to Netlify's nameservers.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">4</div>
+    <div class="flow-body">
+      <h4>Verify Resend domain</h4>
+      <p>Once you have a domain, verify it in Resend so emails send from <code>hello@yourdomain.com</code> instead of <code>onboarding@resend.dev</code>.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+  <div class="flow-item">
+    <div class="flow-num">5</div>
+    <div class="flow-body">
+      <h4>Fix Render cold start</h4>
+      <p>Free tier Render servers sleep after 15 min. First contact form submission is slow (~30s). Fix: add a free uptime monitor (UptimeRobot) that pings <code>/health</code> every 10 minutes to keep it warm.</p>
+    </div>
+    <div class="flow-connector"></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<p style="text-align:center; color:#999; font-size:12px; margin-top:32px;">
+  Generated for Varun Sadashive Gowda &nbsp;·&nbsp; Portfolio Project &nbsp;·&nbsp; 2025
+</p>
+
+</body>
+</html>
