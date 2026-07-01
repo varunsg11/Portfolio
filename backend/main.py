@@ -14,7 +14,12 @@ app = FastAPI()
 # Allow requests from the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://varunsg.dev",
+        "https://www.varunsg.dev",
+        "http://127.0.0.1:5500",  # local dev
+        "http://localhost:5500",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
