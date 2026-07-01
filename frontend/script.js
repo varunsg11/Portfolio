@@ -109,3 +109,52 @@ contactForm.addEventListener('submit', async (e) => {
         submitBtn.querySelector('span').textContent = 'Send Message';
     }
 });
+
+// ── PRELOADER ──
+const preloader = document.getElementById('preloader');
+window.addEventListener('load', () => {
+    setTimeout(() => preloader.classList.add('hidden'), 1500);
+});
+
+// ── SCROLL PROGRESS BAR ──
+const scrollProgress = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProgress.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+}, { passive: true });
+
+
+// ── TYPEWRITER HERO TAGLINE ──
+const typewriterEl = document.getElementById('typewriter');
+const roles = [
+    'Agentic AI Developer',
+    'Multi-Agent Systems Engineer',
+    'LLM Infrastructure Builder',
+    'Full Stack Developer',
+    'Claude Max Plan Enjoyer 🤌',
+];
+let roleIndex = 0, charIndex = 0, isDeleting = false;
+
+function typeLoop() {
+    const current = roles[roleIndex];
+    if (isDeleting) {
+        typewriterEl.textContent = current.slice(0, --charIndex);
+    } else {
+        typewriterEl.textContent = current.slice(0, ++charIndex);
+    }
+
+    let delay = isDeleting ? 40 : 70;
+    if (!isDeleting && charIndex === current.length) {
+        delay = 1800;
+        isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        delay = 350;
+    }
+    setTimeout(typeLoop, delay);
+}
+
+// start typewriter after preloader + hero fade-in delay
+setTimeout(typeLoop, 2000);

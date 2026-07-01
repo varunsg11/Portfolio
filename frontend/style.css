@@ -1,3 +1,16 @@
+/* ── GRAIN TEXTURE OVERLAY ── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 180px 180px;
+}
+
 :root {
     --bg: #0a0a0a;
     --bg-alt: #111111;
@@ -572,6 +585,11 @@ body {
     line-height: 1.6;
 }
 
+.num {
+    color: var(--accent);
+    font-weight: 700;
+}
+
 /* ── CERTIFICATIONS ── */
 .cert-list {
     display: flex;
@@ -1028,4 +1046,122 @@ footer p {
     .section-title { margin-bottom: 40px; }
     .cards-grid { grid-template-columns: 1fr; }
     .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+/* ── PRELOADER ── */
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.preloader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+.preloader-logo {
+    font-size: clamp(2.4rem, 7vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    animation: preloaderPulse 1.2s ease-in-out infinite alternate;
+}
+.preloader-logo span { color: var(--accent); }
+@keyframes preloaderPulse {
+    from { opacity: 0.4; transform: scale(0.97); }
+    to   { opacity: 1;   transform: scale(1); }
+}
+.preloader-bar {
+    width: 120px;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.preloader-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 999px;
+    animation: preloaderLoad 1.4s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes preloaderLoad {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    100% { width: 100%; }
+}
+
+/* ── SCROLL PROGRESS BAR ── */
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--accent);
+    z-index: 10001;
+    transition: width 0.08s linear;
+    box-shadow: 0 0 8px rgba(230,57,70,0.6);
+}
+
+
+/* ── TYPEWRITER HERO TAGLINE ── */
+.hero-tagline {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    margin-bottom: 16px;
+    min-height: 1.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--accent);
+    animation: blink 0.85s step-end infinite;
+    font-weight: 300;
+    margin-left: 1px;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* ── GLASSMORPHISM CARD UPGRADES ── */
+.skill-card,
+.tl-card,
+.cert-row:hover,
+.card,
+.edu-card {
+    background: rgba(22, 22, 22, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 1px 0 0 rgba(255,255,255,0.04) inset, 0 4px 24px rgba(0,0,0,0.3);
+}
+.skill-card:hover,
+.tl-card:hover,
+.card:hover {
+    background: rgba(28, 28, 28, 0.75);
+    border-color: rgba(255,255,255,0.13);
+    box-shadow: 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 8px 32px rgba(0,0,0,0.4);
+}
+.edu-card-featured {
+    background: linear-gradient(135deg, rgba(230,57,70,0.07), rgba(22,22,22,0.65));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }

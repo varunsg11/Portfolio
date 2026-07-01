@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Varun Sadashive Gowda</title>
     <meta name="description" content="Varun Sadashive Gowda — Incoming MCS student at Texas A&M, Agentic AI Developer with 3+ years building multi-agent systems and enterprise AI. Seeking Summer 2027 internships.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Varun Sadashive Gowda — Agentic AI Developer">
+    <meta property="og:description" content="Incoming MCS student at Texas A&M. 3+ years building multi-agent AI systems at SAP Labs. Seeking Summer 2027 internships in AI/ML/SWE.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://varunsg.dev">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Varun Sadashive Gowda — Agentic AI Developer">
+    <meta name="twitter:description" content="Incoming MCS student at Texas A&M. 3+ years building multi-agent AI systems at SAP Labs. Seeking Summer 2027 internships.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +25,18 @@
 </head>
 <body>
 
-    <header id="header">
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="preloader-inner">
+            <span class="preloader-logo">vsg.</span>
+            <div class="preloader-bar"><div class="preloader-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- SCROLL PROGRESS -->
+    <div id="scrollProgress"></div>
+
+<header id="header">
         <nav class="navbar container">
             <a href="#home" class="logo">vsg.</a>
             <ul class="nav-links" id="navLinks">
@@ -46,7 +68,8 @@
                         Incoming MCS Student · Texas A&M University · Seeking Summer 2027 Internships
                     </div>
                     <h1 class="fade-up">Varun<br><span>Sadashive Gowda</span></h1>
-                    <p class="hero-desc fade-up">AI Developer with 3+ years building agentic AI systems and enterprise automation. Previously at SAP Labs — now bringing that experience to grad school and industry opportunities.</p>
+                    <p class="hero-tagline fade-up"><span id="typewriter"></span><span class="typewriter-cursor">|</span></p>
+                    <p class="hero-desc fade-up">AI Developer with 3+ years building agentic AI systems and enterprise automation. Previously at SAP Labs, now bringing that experience to grad school and industry opportunities.</p>
                     <div class="hero-actions fade-up">
                         <a href="#contact" class="btn btn-primary">Get in touch</a>
                         <a href="https://portfolio-9s06.onrender.com/resume" class="btn btn-ghost"><i class="fas fa-download"></i> Resume</a>
@@ -215,12 +238,12 @@
                             </div>
                         </div>
                         <ul>
-                            <li>Designed and deployed multi-agent workflows for SAP GCID Support engineers, reducing work effort by 30% using CrewAI & LangGraph.</li>
+                            <li>Designed and deployed multi-agent workflows for SAP GCID Support engineers, reducing work effort by <span class="num">30%</span> using CrewAI & LangGraph.</li>
                             <li>Developed custom agent tools for data extraction, solution analysis, document parsing (PDF/CSV), automated reporting, and image extraction from PDFs (SAP BOCR).</li>
                             <li>Built and maintained an MCP (Model Context Protocol) server integrating CLOKS (data warehouse) and AIM (AI agents) repositories.</li>
                             <li>Built a RAG pipeline on Databricks — ingests enterprise documents, converts to Markdown, performs semantic chunking, and indexes embeddings in SAP HANA DB.</li>
                             <li>Automated Databricks job execution via GitHub Actions, enabling CI/CD-driven orchestration of data workflows.</li>
-                            <li>Led Docker containerization efforts, cutting image size by 67% (6 GB → 2 GB).</li>
+                            <li>Led Docker containerization efforts, cutting image size by <span class="num">67%</span> (<span class="num">6 GB → 2 GB</span>).</li>
                         </ul>
                     </div>
                 </div>
@@ -237,10 +260,10 @@
                             </div>
                         </div>
                         <ul>
-                            <li>Resolved 600+ critical issues for SAP customers through incident management. [ABAP, C++]</li>
-                            <li>Mentored junior engineers and external hires, enhancing team productivity by 20% through code reviews and technical workshops on Transportation Management.</li>
+                            <li>Resolved <span class="num">600+</span> critical issues for SAP customers through incident management. [ABAP, C++]</li>
+                            <li>Mentored junior engineers and external hires, enhancing team productivity by <span class="num">20%</span> through code reviews and technical workshops on Transportation Management.</li>
                             <li>Collaborated with EWM, MM, SD, and BN4L cross-functional teams to create datasets for internal systems.</li>
-                            <li>Compiled a knowledge repository accessed by 300+ SAP customers.</li>
+                            <li>Compiled a knowledge repository accessed by <span class="num">300+</span> SAP customers.</li>
                             <li>Assisted customers with greenfield/brownfield implementation design and clean core operations.</li>
                         </ul>
                     </div>
