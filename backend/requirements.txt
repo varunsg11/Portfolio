@@ -4,4 +4,14 @@ python-multipart
 resend
 python-dotenv
 pydantic[email]
+pydantic-settings
 slowapi
+sqlalchemy
+psycopg[binary]
+pgvector
+alembic
+openai
+pypdf
+tiktoken
+pytest
+httpx
