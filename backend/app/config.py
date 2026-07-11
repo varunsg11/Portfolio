@@ -38,6 +38,9 @@ class Settings(BaseSettings):
         "http://localhost:5500",
         "http://localhost:3000",  # Next.js dev
     ]
+    # Regex matching Vercel deployments (production alias + per-commit previews).
+    # e.g. https://portfoliomain-two-wine.vercel.app, https://portfolio-xyz.vercel.app
+    allowed_origin_regex: str = r"https://.*\.vercel\.app"
 
 
 @lru_cache
