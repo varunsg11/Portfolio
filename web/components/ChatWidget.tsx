@@ -24,10 +24,12 @@ export default function ChatWidget() {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, open]);
 
-  // Fire a one-off "chat opened" analytics event.
+  // When the chat opens: log the event AND wake the backend (Render free tier
+  // sleeps after ~15 min idle, so warm it before the first question).
   useEffect(() => {
     if (!open) return;
     fetch(`${API_BASE}/api/event?event_type=chat_open`, { method: "POST" }).catch(() => {});
+    fetch(`${API_BASE}/health`).catch(() => {});
   }, [open]);
 
   async function send(question: string) {
@@ -38,7 +40,25 @@ export default function ChatWidget() {
     setMessages((m) => [...m, { role: "user", content: q }, { role: "assistant", content: "" }]);
     setStreaming(true);
 
-    try {
+    // Replace the (empty) assistant bubble's text.
+    const setAssistant = (content: string) =>
+      setMessages((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = { role: "assistant", content };
+        return copy;
+      });
+    const appendAssistant = (token: string) =>
+      setMessages((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          role: "assistant",
+          content: copy[copy.length - 1].content + token,
+        };
+        return copy;
+      });
+
+    // Stream one attempt. Returns true if any tokens were received.
+    async function attempt(): Promise<boolean> {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,49 +66,48 @@ export default function ChatWidget() {
       });
       if (!res.ok || !res.body) throw new Error("bad response");
 
-      // Parse the Server-Sent Events stream token by token.
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let got = false;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
         const events = buffer.split("\n\n");
-        buffer = events.pop() ?? ""; // keep incomplete trailing event
+        buffer = events.pop() ?? "";
 
         for (const evt of events) {
           const line = evt.replace(/^data:\s*/, "").trim();
           if (!line) continue;
           const data = JSON.parse(line);
           if (data.token) {
-            setMessages((m) => {
-              const copy = [...m];
-              copy[copy.length - 1] = {
-                role: "assistant",
-                content: copy[copy.length - 1].content + data.token,
-              };
-              return copy;
-            });
+            if (!got) setAssistant(""); // clear any "waking up" placeholder
+            got = true;
+            appendAssistant(data.token);
           } else if (data.error) {
             throw new Error(data.error);
           }
         }
       }
+      return got;
+    }
+
+    try {
+      await attempt();
     } catch {
-      setMessages((m) => {
-        const copy = [...m];
-        const last = copy[copy.length - 1];
-        if (last?.role === "assistant" && !last.content) {
-          copy[copy.length - 1] = {
-            role: "assistant",
-            content:
-              "Sorry — I couldn't answer that right now. Please email varunsg118@gmail.com.",
-          };
-        }
-        return copy;
-      });
+      // Likely a Render cold start — tell the user, wait, and retry once.
+      setAssistant("Waking up the server… one moment.");
+      await new Promise((r) => setTimeout(r, 4000));
+      try {
+        const ok = await attempt();
+        if (!ok) throw new Error("empty");
+      } catch {
+        setAssistant(
+          "Sorry — I couldn't answer that right now. Please email varunsg118@gmail.com."
+        );
+      }
     } finally {
       setStreaming(false);
     }
