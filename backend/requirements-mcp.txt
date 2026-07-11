@@ -1,0 +1,3 @@
+# Optional: only needed to run the standalone MCP server (python -m app.mcp_server).
+# Not required for the web backend on Render.
+mcp

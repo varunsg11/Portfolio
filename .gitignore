@@ -5,3 +5,15 @@ __pycache__/
 .DS_Store
 architecture.html
 .venv
+
+# Internal / local-only docs (not published)
+DEPLOYMENT.md
+web/AGENTS.md
+web/CLAUDE.md
+
+# Next.js frontend (web/)
+web/node_modules/
+web/.next/
+web/out/
+web/.env.local
+web/next-env.d.ts

@@ -1,190 +1,84 @@
-# 🌐 varunsg.dev — Personal Portfolio
+# varunsg.dev
 
-> Personal portfolio website for **Varun Sadashive Gowda** — AI Engineer & incoming MCS student at Texas A&M University (Fall 2026).
+Personal portfolio site for Varun Sadashive Gowda. Built as a full-stack
+project: a Next.js frontend, a FastAPI backend, and a retrieval-augmented
+chatbot that answers questions about my background from a vector-indexed
+knowledge base.
 
-[![Live Site](https://img.shields.io/badge/Live%20Site-varunsg.dev-blue?style=flat-square)](https://varunsg.dev)
-[![Frontend](https://img.shields.io/badge/Frontend-Netlify-00C7B7?style=flat-square&logo=netlify)](https://netlify.com)
-[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=flat-square&logo=render)](https://render.com)
-[![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
+Live at [varunsg.dev](https://varunsg.dev).
 
----
+## Overview
 
-## ✨ Features
+The site is split into two independently deployed halves that communicate over
+HTTP:
 
-- **Animated hero section** with typewriter role cycling and blob backgrounds
-- **Work experience timeline** with smooth scroll-driven animations
-- **Skill proficiency rings** with SVG stroke animation
-- **Research papers & certifications** showcase
-- **Contact form** — async POST to backend, delivers email via Resend API
-- **Resume download** — one-click PDF download served from the backend
-- **Fully responsive** — mobile-first layout with hamburger nav
-- **Dark theme** with glassmorphism cards and grain texture overlay
+- **`web/`** — the frontend: a Next.js (App Router) application in React and
+  TypeScript. Deployed to Vercel.
+- **`backend/`** — the API: a FastAPI service handling the contact form, resume
+  delivery, analytics, and the chatbot. Deployed to Render, backed by Postgres
+  with the pgvector extension.
 
----
+The chatbot is the centrepiece. It uses retrieval-augmented generation: my
+experience, projects, and resume are chunked, embedded, and stored in pgvector;
+a question is embedded, the nearest chunks are retrieved, and an OpenAI model
+answers grounded only in that context. It can also call tools — for example,
+fetching live GitHub stats or routing an introduction into the contact pipeline.
 
-## 🛠️ Tech Stack
-
-### Frontend
-| Technology | Purpose |
-|-----------|---------|
-| HTML5, CSS3, Vanilla JS | No build step, no framework |
-| CSS Custom Properties | Design system & dark theme |
-| IntersectionObserver API | Scroll-driven fade-up animations |
-| Font Awesome 6 + Google Fonts | Icons and typography (CDN) |
-
-### Backend
-| Technology | Purpose |
-|-----------|---------|
-| Python 3.14 + FastAPI | REST API server |
-| Uvicorn | ASGI server |
-| Pydantic (with email validation) | Request body validation |
-| slowapi | Rate limiting (3 req/min per IP) |
-| Resend | Transactional email delivery |
-| python-dotenv | Secret management via `.env` |
-
-### Infrastructure
-| Service | Role |
-|---------|------|
-| Netlify | Frontend hosting — auto-deploys from `frontend/` on push to `main` |
-| Render (free tier) | Backend hosting — auto-deploys from `backend/` on push to `main` |
-| Resend | Email API (3,000 emails/month on free tier) |
-| varunsg.dev | Custom domain |
-
----
-
-## 📁 Project Structure
+## Repository layout
 
 ```
-portfolio/
-├── assets/
-│   ├── me.jpg                      # Profile photo (hero section)
-│   └── Varun_237008771.pdf         # Resume PDF served by /resume endpoint
-│
-├── frontend/                       # Static site → deployed to Netlify
-│   ├── index.html                  # Single-page portfolio (all sections)
-│   ├── style.css                   # All styles, animations, responsive layout
-│   └── script.js                   # Scroll animations, nav, contact form, typewriter
-│
-├── backend/                        # Python API → deployed to Render
-│   ├── main.py                     # FastAPI app — 3 endpoints
-│   ├── requirements.txt            # Python dependencies
-│   └── .env                        # gitignored — API keys (see below)
-│
-└── .gitignore
+web/        Next.js frontend (React, TypeScript)
+backend/    FastAPI backend (RAG chatbot, contact, analytics)
+frontend/   Original static site (superseded by web/, kept for reference)
+assets/     Resume PDF and images
 ```
 
----
+Each of `web/` and `backend/` has its own README with setup and development
+instructions.
 
-## ⚙️ Local Development
+## Stack
 
-### Prerequisites
-- Python 3.10+
-- A [Resend](https://resend.com) account and API key
+| Layer     | Technologies                                                        |
+|-----------|---------------------------------------------------------------------|
+| Frontend  | Next.js, React, TypeScript, Tailwind CSS                            |
+| Backend   | Python, FastAPI, SQLAlchemy, Alembic, Pydantic                      |
+| Data / AI | Postgres + pgvector, OpenAI (embeddings + chat), Model Context Protocol |
+| Email     | Resend                                                              |
+| Hosting   | Vercel (frontend), Render (backend), Neon (database)               |
 
-### Frontend
+## Local development
 
-No build step required. Open `frontend/index.html` directly in a browser, or use a local server for accurate fetch behavior:
+Run the backend and frontend in separate terminals.
 
-```bash
-cd frontend
-python -m http.server 8080
-# → http://localhost:8080
-```
-
-### Backend
+**Backend**
 
 ```bash
 cd backend
-
-# 1. Create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate        # macOS/Linux
-venv\Scripts\activate           # Windows
-
-# 2. Install dependencies
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# 3. Create the .env file
-echo "RESEND_API_KEY=your_resend_api_key_here" > .env
-
-# 4. Start the development server
-uvicorn main:app --reload
-# → http://localhost:8000
+cp .env.example .env            # add your keys
+alembic upgrade head            # create tables
+python -m app.services.ingest   # build the knowledge base
+uvicorn app.main:app --reload   # http://localhost:8000
 ```
 
----
+**Frontend**
 
-## 🔐 Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `RESEND_API_KEY` | Yes | API key from [resend.com](https://resend.com) — used to send contact form emails |
-
-
----
-
-## 📡 API Reference
-
-Base URL (production): `https://your-render-app.onrender.com`
-
-### `POST /api/contact`
-Sends a contact form email to the site owner. Rate-limited to **3 requests per minute per IP**.
-
-**Request body:**
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "subject": "Opportunity",
-  "message": "Hi Varun, I'd love to connect."
-}
+```bash
+cd web
+npm install
+cp .env.local.example .env.local   # point NEXT_PUBLIC_API_BASE at the backend
+npm run dev                          # http://localhost:3000
 ```
 
-**Response:**
-```json
-{ "message": "Sent" }
+See `backend/README.md` and `web/README.md` for details.
+
+## Testing
+
+```bash
+cd backend && python -m pytest      # backend contract + tool tests
+cd web && npm run build             # typecheck, lint, production build
 ```
 
----
-
-### `GET /resume`
-Downloads the resume PDF.
-
-**Response:** `application/pdf` file download — `Varun_Sadashive_Gowda_Resume.pdf`
-
----
-
-### `GET /health`
-Health check endpoint.
-
-**Response:**
-```json
-{ "status": "ok" }
-```
-
----
-
-## 🚀 Deployment
-
-Both services auto-deploy on every push to `main`. No manual steps needed after initial setup.
-
-| Service | Deploy time | Notes |
-|---------|------------|-------|
-| Netlify (frontend) | ~30 seconds | Publish directory: `frontend/` |
-| Render (backend) | ~2 minutes | Free tier cold-starts after 15 min of inactivity |
-
-### CORS
-The backend allows requests from:
-- `https://varunsg.dev`
-- `https://www.varunsg.dev`
-- `http://localhost:5500` (local dev)
-- `http://127.0.0.1:5500` (local dev)
-
-If you fork this project, update the `allow_origins` list in `backend/main.py` to match your domain.
-
----
-
-## 📄 License
-
-This project is open source. Feel free to use it as inspiration for your own portfolio — just swap out the personal content.
+Continuous integration runs both on every pull request.
