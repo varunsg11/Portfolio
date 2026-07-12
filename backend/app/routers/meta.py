@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 
 router = APIRouter()
 
-RESUME_PATH = Path(__file__).resolve().parent.parent.parent.parent / "assets" / "Varun_237008771.pdf"
+RESUME_PATH = Path(__file__).resolve().parent.parent.parent.parent / "assets" / "Varun_SadashiveGowda_Resume.pdf"
 
 
 @router.get("/resume")
@@ -17,7 +17,7 @@ async def download_resume():
     return FileResponse(
         RESUME_PATH,
         media_type="application/pdf",
-        filename="Varun_Sadashive_Gowda_Resume.pdf",
+        filename="Varun_SadashiveGowda_Resume.pdf",
     )
 
 

@@ -5,7 +5,7 @@ Run as a script:  python -m app.services.ingest
 Sources (single source of truth mirrors the frontend's lib/content.ts):
   1. Structured profile facts (experience, skills, projects, research, education)
   2. knowledge/faq.md  — curated talking points, split on `##` headings
-  3. assets/Varun_237008771.pdf — resume text (optional, via pypdf)
+  3. assets/Varun_SadashiveGowda_Resume.pdf — resume text (optional, via pypdf)
 
 Pipeline: load sources -> chunk -> embed (batched) -> replace kb_chunks table.
 Idempotent: wipes and rebuilds the table each run. Logs chunk counts (no silent
@@ -25,7 +25,7 @@ from app.services.openai_client import embed_batch
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 KNOWLEDGE_DIR = BACKEND_DIR / "knowledge"
-RESUME_PATH = BACKEND_DIR.parent / "assets" / "Varun_237008771.pdf"
+RESUME_PATH = BACKEND_DIR.parent / "assets" / "Varun_SadashiveGowda_Resume.pdf"
 
 
 def _structured_chunks() -> list[tuple[str, str]]:
