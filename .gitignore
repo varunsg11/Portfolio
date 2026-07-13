@@ -4,6 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 architecture.html
+debug.html
 .venv
 
 # Internal / local-only docs (not published)
