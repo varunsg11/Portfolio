@@ -19,18 +19,18 @@ function SkillCard({ skill }: { skill: Skill }) {
           if (!entry.isIntersecting) return;
           const target = skill.percent;
           let current = 0;
-          const step = target / 50;
+          const steps = 80;
+          const step = target / steps;
           const id = setInterval(() => {
             current = Math.min(current + step, target);
+            const val = Math.round(current);
             ringRef.current?.setAttribute(
               "stroke-dasharray",
               `${current.toFixed(1)},100`
             );
-            if (pctRef.current) {
-              pctRef.current.textContent = Math.round(current) + "%";
-            }
+            if (pctRef.current) pctRef.current.textContent = val + "%";
             if (current >= target) clearInterval(id);
-          }, 20);
+          }, 16);
           observer.unobserve(card);
         });
       },

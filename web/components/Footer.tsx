@@ -7,7 +7,7 @@ export default function Footer() {
         <a href="#home" className="logo">
           {profile.logo}
         </a>
-        <p>&copy; 2025 {profile.name}</p>
+        <p>&copy; 2026 {profile.name}</p>
         <div className="footer-socials">
           <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
             <i className="fab fa-linkedin-in"></i>
