@@ -58,10 +58,10 @@ export type Skill = {
 export const skills: Skill[] = [
   { name: "Python", icon: "fab fa-python", percent: 90, blurb: "ML pipelines, automation, AI development" },
   { name: "ABAP", icon: "fas fa-database", percent: 90, blurb: "SAP development & integrations" },
-  { name: "Java", icon: "fab fa-java", percent: 70, blurb: "OOP & backend development" },
-  { name: "C / C++", icon: "fas fa-code", percent: 78, blurb: "Systems & algorithmic foundations" },
-  { name: "SQL", icon: "fas fa-database", percent: 75, blurb: "Database design & semantic search" },
   { name: "JavaScript", icon: "fab fa-js", percent: 85, blurb: "Frontend interactions & scripting" },
+  { name: "C / C++", icon: "fas fa-code", percent: 80, blurb: "Systems & algorithmic foundations" },
+  { name: "SQL", icon: "fas fa-database", percent: 75, blurb: "Database design & semantic search" },
+  { name: "Java", icon: "fab fa-java", percent: 70, blurb: "OOP & backend development" },
 ];
 
 export const techPills = {

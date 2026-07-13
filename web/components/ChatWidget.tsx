@@ -36,6 +36,7 @@ export default function ChatWidget() {
     const q = question.trim();
     if (!q || streaming) return;
 
+    fetch(`${API_BASE}/api/event?event_type=question_asked&detail=${encodeURIComponent(q)}`, { method: "POST" }).catch(() => {});
     setInput("");
     setMessages((m) => [...m, { role: "user", content: q }, { role: "assistant", content: "" }]);
     setStreaming(true);

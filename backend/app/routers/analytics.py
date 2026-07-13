@@ -2,9 +2,10 @@
 
 import logging
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from sqlalchemy import func, select
 
+from app.config import settings
 from app.db import db_available, get_db
 from app.models import ChatLog, ContactSubmission, PageEvent
 from app.schemas import AnalyticsSummary
@@ -36,7 +37,10 @@ async def record_event(event_type: str, detail: str = ""):
 
 
 @router.get("/api/analytics", response_model=AnalyticsSummary)
-async def analytics():
+async def analytics(authorization: str = Header(default="")):
+    key = settings.analytics_key
+    if key and authorization != f"Bearer {key}":
+        raise HTTPException(status_code=401, detail="Unauthorized")
     if not db_available():
         raise HTTPException(status_code=503, detail="Analytics not configured")
 

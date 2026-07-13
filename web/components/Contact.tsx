@@ -35,6 +35,7 @@ export default function Contact() {
         message: "Message sent! I'll get back to you soon.",
       });
       form.reset();
+      fetch(`${API_BASE}/api/event?event_type=form_submit`, { method: "POST" }).catch(() => {});
     } catch {
       setStatus({
         type: "error",

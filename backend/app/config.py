@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     rag_top_k: int = 5
     chat_max_input_chars: int = 1000
 
+    # ── Analytics ──
+    analytics_key: str = ""  # if set, GET /api/analytics requires Bearer <key>
+
     # ── CORS ──
     allowed_origins: list[str] = [
         "https://varunsg.dev",

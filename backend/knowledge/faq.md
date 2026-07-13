@@ -34,7 +34,55 @@ this site or email varunsg118@gmail.com.
 After 3+ years of hands-on industry experience building AI systems at SAP, Varun
 is pursuing an MCS at Texas A&M to deepen his computer science foundations and
 bring that combination of practical engineering and formal study to research and
-industry opportunities.
+industry opportunities. The transition from Associate Solution Support Engineer
+to Agentic AI Developer was a deliberate signal to himself: he wanted to work in
+areas that demanded deeper reasoning, more creativity, and a stronger grounding in
+AI/ML. Graduate study is the next step in that progression — he wants to understand
+intelligent systems more deeply, design them with stronger theoretical grounding,
+and contribute to research that advances practical AI.
+
+## How did Varun grow from a support engineer to an AI developer?
+Varun spent close to two years as an Associate Solution Support Engineer at SAP,
+working directly with customers and product teams on complex system behaviour,
+cross-team dependencies, and supporting software at scale. That experience shaped
+how he thinks about large systems, but it also made clear what he wanted next:
+problems that demanded deeper reasoning and creativity. That drive led him to
+transition into an Agentic AI Developer role at SAP, where he designed multi-agent
+architectures to reduce L1 engineer workload by 30%. Each stage — intern, support
+engineer, AI developer, incoming grad student — has been a deliberate step outward
+from what was comfortable.
+
+## Why did Varun choose Texas A&M for his Master's?
+Several things drew Varun to TAMU's MCS program specifically. The program's breadth
+across AI, Data Science, and Systems lets him explore connections between disciplines
+rather than specialising too narrowly too early. The faculty research is particularly
+relevant to where he wants to go: Professor James Caverlee's work on training
+data-efficient large language models and Professor Shuiwang Ji's work on machine
+learning explanations to prevent overtrust in fake news detection both directly
+connect to his interest in building trustworthy, high-quality AI systems. The Texas
+A&M Institute of Data Science and its focus on real-world problems also appeals to
+him — he learns best in environments where technical depth and practical impact go
+together. Outside academics, he plans to get involved in the AGI Artificial
+Intelligence Society, the TAMU Hack Club, and the AGI Coding Club.
+
+## What are Varun's long-term career goals?
+After completing his MCS, Varun wants to work on cutting-edge AI technology stacks.
+With his background in agentic AI, he aspires to contribute to leading organisations
+such as NVIDIA, AMD, and Tesla — companies pushing the frontier of AI hardware and
+applied intelligence. In the long term, he wants to advance into roles where he
+designs and builds robust AI-driven systems that enable scalable, efficient, and
+strategically meaningful innovation.
+
+## What is Varun's background before SAP — where did his interest in CS come from?
+Varun's interest in computing began when his father brought home a Windows XP Dell
+laptop. Watching simple keystrokes produce meaningful outputs sparked a fascination
+with the mechanics of computation that never left him. That curiosity led him to
+pursue Electronics and Communication Engineering at JSSSTU, graduating with a CGPA
+of 8.94. His undergraduate years were shaped by IEEE and Linux Campus Club (LCC)
+involvement, hackathons, and workshops — environments where he discovered that
+genuine innovation happens at the intersection of perspectives. His ECE background
+also gave him a hardware-software duality lens: understanding that both forces
+together power intelligent systems, not either one alone.
 
 ## What are Varun's strongest technical skills?
 Python (ML pipelines, automation), multi-agent orchestration (CrewAI, LangGraph),
