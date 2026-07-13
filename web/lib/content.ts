@@ -56,22 +56,26 @@ export type Skill = {
 };
 
 export const skills: Skill[] = [
-  { name: "Python", icon: "fab fa-python", percent: 92, blurb: "ML pipelines, automation, AI development" },
-  { name: "ABAP", icon: "fas fa-database", percent: 88, blurb: "SAP development & integrations" },
-  { name: "Java", icon: "fab fa-java", percent: 78, blurb: "OOP & backend development" },
+  { name: "Python", icon: "fab fa-python", percent: 90, blurb: "ML pipelines, automation, AI development" },
+  { name: "ABAP", icon: "fas fa-database", percent: 90, blurb: "SAP development & integrations" },
+  { name: "Java", icon: "fab fa-java", percent: 70, blurb: "OOP & backend development" },
   { name: "C / C++", icon: "fas fa-code", percent: 78, blurb: "Systems & algorithmic foundations" },
   { name: "SQL", icon: "fas fa-database", percent: 75, blurb: "Database design & semantic search" },
-  { name: "JavaScript", icon: "fab fa-js", percent: 70, blurb: "Frontend interactions & scripting" },
-  { name: "PyTorch", icon: "fas fa-fire", percent: 80, blurb: "Deep learning & model training" },
-  { name: "LangChain", icon: "fas fa-link", percent: 85, blurb: "LLM chaining & agent tooling" },
-  { name: "Docker", icon: "fab fa-docker", percent: 80, blurb: "Containerisation & deployment" },
+  { name: "JavaScript", icon: "fab fa-js", percent: 85, blurb: "Frontend interactions & scripting" },
 ];
 
 export const techPills = {
   alsoWorkWith: [
-    "Go", "YAML", "Kubernetes", "GitHub Actions", "Databricks",
-    "SAP HANA DB", "MLflow", "Hugging Face", "vLLM", "OpenAI API",
+    "PyTorch", "LangChain", "Docker", "Go", "YAML", "Kubernetes", "GitHub Actions",
+    "Databricks", "SAP HANA DB", "MLflow", "Hugging Face", "vLLM", "OpenAI API",
   ],
+  aiml: [
+    "Multi-Agent Orchestration", "LLM Integration & Tooling", "Prompt Engineering",
+    "RAG Pipelines", "Vector Databases & Semantic Search", "NLP",
+    "CrewAI & LangGraph", "MCP Server", "Transformer Fine-tuning (PEFT/LoRA)",
+    "MLOps", "Statistical Modeling",
+  ],
+} as const;
   aiml: [
     "Multi-Agent Orchestration", "LLM Integration & Tooling", "Prompt Engineering",
     "RAG Pipelines", "Vector Databases & Semantic Search", "NLP",
