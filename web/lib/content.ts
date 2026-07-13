@@ -76,13 +76,6 @@ export const techPills = {
     "MLOps", "Statistical Modeling",
   ],
 } as const;
-  aiml: [
-    "Multi-Agent Orchestration", "LLM Integration & Tooling", "Prompt Engineering",
-    "RAG Pipelines", "Vector Databases & Semantic Search", "NLP",
-    "CrewAI & LangGraph", "MCP Server", "Transformer Fine-tuning (PEFT/LoRA)",
-    "MLOps", "Statistical Modeling",
-  ],
-} as const;
 
 export type Experience = {
   title: string;
