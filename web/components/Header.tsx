@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { profile, navLinks } from "@/lib/content";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
+  const clickCount = useRef(0);
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Highlight the nav link for the section currently in view.
   useEffect(() => {
     const sections = document.querySelectorAll<HTMLElement>("section[id]");
     const observer = new IntersectionObserver(
@@ -22,10 +24,28 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
+  function handleLogoClick(e: React.MouseEvent) {
+    e.preventDefault();
+    clickCount.current += 1;
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => { clickCount.current = 0; }, 1200);
+    if (clickCount.current >= 5) {
+      clickCount.current = 0;
+      window.dispatchEvent(new CustomEvent("vsg-easter-egg"));
+    } else {
+      window.location.hash = "#home";
+    }
+  }
+
   return (
-    <header id="header">
+    <motion.header
+      id="header"
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    >
       <nav className="navbar container">
-        <a href="#home" className="logo">
+        <a href="#home" className="logo" onClick={handleLogoClick}>
           {profile.logo}
         </a>
         <ul className={`nav-links${open ? " open" : ""}`}>
@@ -51,6 +71,6 @@ export default function Header() {
           <span></span>
         </button>
       </nav>
-    </header>
+    </motion.header>
   );
 }

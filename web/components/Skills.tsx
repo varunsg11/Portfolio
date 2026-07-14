@@ -1,73 +1,63 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { motion } from "framer-motion";
 import { skills, techPills, type Skill } from "@/lib/content";
 
-/** One skill card with an SVG proficiency ring that animates when scrolled into view. */
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+};
+
 function SkillCard({ skill }: { skill: Skill }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<SVGPathElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
   const pctRef = useRef<HTMLSpanElement>(null);
+  const animated = useRef(false);
 
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const target = skill.percent;
-          let current = 0;
-          const steps = 80;
-          const step = target / steps;
-          const id = setInterval(() => {
-            current = Math.min(current + step, target);
-            const val = Math.round(current);
-            ringRef.current?.setAttribute(
-              "stroke-dasharray",
-              `${current.toFixed(1)},100`
-            );
-            if (pctRef.current) pctRef.current.textContent = val + "%";
-            if (current >= target) clearInterval(id);
-          }, 16);
-          observer.unobserve(card);
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(card);
-    return () => observer.disconnect();
-  }, [skill.percent]);
+  function animateBar() {
+    if (animated.current) return;
+    animated.current = true;
+    const target = skill.percent;
+    let current = 0;
+    const steps = 80;
+    const step = target / steps;
+    const id = setInterval(() => {
+      current = Math.min(current + step, target);
+      const val = Math.round(current);
+      if (fillRef.current) fillRef.current.style.width = `${current.toFixed(1)}%`;
+      if (pctRef.current) pctRef.current.textContent = val + "%";
+      if (current >= target) clearInterval(id);
+    }, 16);
+  }
 
   return (
-    <div className="skill-card" ref={cardRef}>
-      <div className="skill-top">
+    <motion.div
+      className="skill-card"
+      variants={cardVariants}
+      onViewportEnter={animateBar}
+      viewport={{ once: true, margin: "-60px" }}
+    >
+      <div className="skill-card-top">
         <i className={skill.icon}></i>
-        <div className="skill-ring">
-          <svg viewBox="0 0 36 36">
-            <path
-              className="ring-bg"
-              pathLength={100}
-              d="M18 2 a 16 16 0 0 1 0 32 a 16 16 0 0 1 0 -32"
-            />
-            <path
-              ref={ringRef}
-              className="ring-fill"
-              pathLength={100}
-              strokeDasharray="0,100"
-              d="M18 2 a 16 16 0 0 1 0 32 a 16 16 0 0 1 0 -32"
-            />
-          </svg>
-          <span className="ring-pct" ref={pctRef}>
-            0%
-          </span>
+        <h4>{skill.name}</h4>
+      </div>
+      <p>{skill.blurb}</p>
+      <div className="skill-bar-wrap">
+        <div className="skill-bar-row">
+          <span className="skill-pct" ref={pctRef}>0%</span>
+        </div>
+        <div className="skill-bar-track">
+          <div className="skill-bar-fill" ref={fillRef}></div>
         </div>
       </div>
-      <h4>{skill.name}</h4>
-      <p>{skill.blurb}</p>
-    </div>
+    </motion.div>
   );
 }
 
@@ -75,16 +65,35 @@ export default function Skills() {
   return (
     <section id="about" className="section">
       <div className="container">
-        <p className="section-label fade-up">About</p>
-        <h2 className="section-title fade-up">Skills &amp; Expertise</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease }}
+        >
+          <p className="section-label">About</p>
+          <h2 className="section-title">Skills &amp; Expertise</h2>
+        </motion.div>
 
-        <div className="skills-grid fade-up">
+        <motion.div
+          className="skills-grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+        >
           {skills.map((skill) => (
             <SkillCard key={skill.name} skill={skill} />
           ))}
-        </div>
+        </motion.div>
 
-        <div className="skills-extra fade-up">
+        <motion.div
+          className="skills-extra"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease, delay: 0.1 }}
+        >
           <div className="skills-extra-col">
             <p className="skills-extra-label">Also work with</p>
             <div className="tech-pills">
@@ -101,7 +110,7 @@ export default function Skills() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

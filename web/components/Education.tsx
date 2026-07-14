@@ -1,16 +1,33 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { education } from "@/lib/content";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Education() {
   return (
     <section id="education" className="section section-alt">
       <div className="container">
-        <p className="section-label fade-up">Background</p>
-        <h2 className="section-title fade-up">Education</h2>
-        <div className="edu-stack fade-up">
-          {education.map((edu) => (
-            <div
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease }}
+        >
+          <p className="section-label">Background</p>
+          <h2 className="section-title">Education</h2>
+        </motion.div>
+
+        <div className="edu-stack">
+          {education.map((edu, i) => (
+            <motion.div
               key={edu.degree}
               className={`edu-card${edu.featured ? " edu-card-featured" : ""}`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease, delay: i * 0.08 }}
             >
               <div className="edu-left">
                 <i className={edu.icon}></i>
@@ -25,7 +42,7 @@ export default function Education() {
                 {edu.note && <p className="edu-note">{edu.note}</p>}
                 {edu.courses && <p className="edu-courses">{edu.courses}</p>}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -20,6 +20,7 @@ export const profile = {
     "Multi-Agent Systems Engineer",
     "LLM Infrastructure Builder",
     "Full Stack Developer",
+    "Bug Developer",
     "Claude Max Plan Enjoyer 🤌",
   ],
   email: "varunsg118@gmail.com",
@@ -182,9 +183,20 @@ export type Project = {
   summary: string;
   icon: string;
   tags: string[];
+  url?: string;
+  featured?: boolean;
 };
 
 export const projects: Project[] = [
+  {
+    title: "Personal Portfolio Website",
+    summary:
+      "This site — a full-stack portfolio with a FastAPI + pgvector RAG backend, streaming AI chat widget, Next.js 16 frontend, and edge-rendered OG images. Deployed on Vercel + Render.",
+    icon: "fas fa-globe",
+    tags: ["Next.js", "FastAPI", "RAG", "pgvector", "Framer Motion"],
+    url: "https://github.com/varunsg11/Portfolio",
+    featured: true,
+  },
   {
     title: "Media Player Control by Hand Gestures",
     summary:
