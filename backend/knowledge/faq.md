@@ -6,9 +6,9 @@ the assistant to answer. Each `##` section becomes one or more retrievable chunk
 ## Who is Varun?
 Varun Sadashive Gowda is an AI developer with 3+ years of experience building
 agentic AI systems and enterprise automation, most recently at SAP Labs in
-Bengaluru. He is an incoming Master of Computer Science (MCS) student at Texas
-A&M University, starting Fall 2026, and is seeking Summer 2027 internships in AI,
-ML, and software engineering.
+Bengaluru. He is now a Master of Computer Science (MCS) student at Texas A&M
+University, based in College Station, Texas since Fall 2026, and is seeking
+Summer 2027 internships in AI, ML, and software engineering.
 
 ## What is Varun's agentic AI experience?
 At SAP Labs, Varun designed and deployed multi-agent workflows for SAP GCID
@@ -27,8 +27,9 @@ itself is a demonstration of his RAG skills.
 
 ## Is Varun available for internships? When?
 Yes. Varun is seeking Summer 2027 internships in AI/ML/Software Engineering while
-completing his MCS at Texas A&M. The best way to reach him is the contact form on
-this site or email varunsg118@gmail.com.
+completing his MCS at Texas A&M in College Station. The best way to reach him is
+the contact form on this site, email varunsg118@gmail.com, or phone
++1 979 326 4622.
 
 ## Why is Varun pursuing a Master's degree?
 After 3+ years of hands-on industry experience building AI systems at SAP, Varun
@@ -49,7 +50,7 @@ how he thinks about large systems, but it also made clear what he wanted next:
 problems that demanded deeper reasoning and creativity. That drive led him to
 transition into an Agentic AI Developer role at SAP, where he designed multi-agent
 architectures to reduce L1 engineer workload by 30%. Each stage — intern, support
-engineer, AI developer, incoming grad student — has been a deliberate step outward
+engineer, AI developer, grad student — has been a deliberate step outward
 from what was comfortable.
 
 ## Why did Varun choose Texas A&M for his Master's?
@@ -148,8 +149,8 @@ No strong preference on the format, but he values knowing his colleagues in pers
 a setup with some in-person time is ideal.
 
 ## Where is Varun located and what is his visa status?
-Varun is based in Texas, USA, and is on an F-1 student visa. He will be attending
-Texas A&M University starting Fall 2026.
+Varun is based in College Station, Texas, USA, and is on an F-1 student visa. He
+has been attending Texas A&M University since Fall 2026.
 
 ## How does Varun approach learning something new?
 He starts small — gets the basics working before layering on complexity. He's a

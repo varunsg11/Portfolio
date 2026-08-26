@@ -1087,7 +1087,8 @@ body.nav-open { overflow: hidden; }
   gap: 14px;
   margin-bottom: 32px;
 }
-.contact-links a {
+.contact-links a,
+.contact-links span {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1096,7 +1097,8 @@ body.nav-open { overflow: hidden; }
   text-decoration: none;
   transition: var(--transition);
 }
-.contact-links a i { color: var(--accent); width: 16px; }
+.contact-links a i,
+.contact-links span i { color: var(--accent); width: 16px; }
 .contact-links a:hover { color: var(--text); }
 .resume-btn { margin-top: 4px; }
 .contact-form { display: flex; flex-direction: column; gap: 16px; }
