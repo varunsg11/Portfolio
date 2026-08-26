@@ -17,7 +17,7 @@ const cardVariants = {
 
 export default function Projects() {
   return (
-    <section id="projects" className="section">
+    <section id="projects" className="section section-alt">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

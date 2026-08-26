@@ -7,7 +7,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Education() {
   return (
-    <section id="education" className="section section-alt">
+    <section id="education" className="section">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

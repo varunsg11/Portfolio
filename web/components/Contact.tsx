@@ -121,7 +121,9 @@ export default function Contact() {
               <i className="fas fa-paper-plane"></i>
             </button>
             {status.type && (
-              <div className={`form-status ${status.type}`}>{status.message}</div>
+              <div className={`form-status ${status.type}`} role="status">
+                {status.message}
+              </div>
             )}
           </motion.form>
         </div>
