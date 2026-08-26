@@ -28,16 +28,19 @@ export const profile = {
   phone: "+91 84312 62742",
   linkedin: "https://www.linkedin.com/in/varuns11/",
   github: "https://github.com/varunsg11",
-  resumeUrl: "https://portfolio-9s06.onrender.com/resume",
+  // Served straight off the CDN from web/public — a static file can't cold-start
+  // the way the free-tier backend does, and this is the highest-intent click.
+  resumeUrl: "/Varun_SadashiveGowda_Resume.pdf",
   metaDescription:
     "Varun Sadashive Gowda — Incoming MCS student at Texas A&M, Agentic AI Developer with 3+ years building multi-agent systems and enterprise AI. Seeking Summer 2027 internships.",
 } as const;
 
 export const navLinks = [
-  { href: "#about", label: "About" },
+  { href: "#bio", label: "About" },
   { href: "#experience", label: "Experience" },
   { href: "#research", label: "Research" },
   { href: "#projects", label: "Projects" },
+  { href: "#education", label: "Education" },
   { href: "#contact", label: "Contact" },
 ] as const;
 

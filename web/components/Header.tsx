@@ -24,6 +24,12 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
+  // The mobile menu is a fullscreen overlay; stop the page behind it scrolling.
+  useEffect(() => {
+    document.body.classList.toggle("nav-open", open);
+    return () => document.body.classList.remove("nav-open");
+  }, [open]);
+
   function handleLogoClick(e: React.MouseEvent) {
     e.preventDefault();
     clickCount.current += 1;
@@ -44,11 +50,14 @@ export default function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <nav className="navbar container">
         <a href="#home" className="logo" onClick={handleLogoClick}>
           {profile.logo}
         </a>
-        <ul className={`nav-links${open ? " open" : ""}`}>
+        <ul id="nav-links" className={`nav-links${open ? " open" : ""}`}>
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
@@ -64,6 +73,8 @@ export default function Header() {
         <button
           className="hamburger"
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="nav-links"
           onClick={() => setOpen((o) => !o)}
         >
           <span></span>

@@ -17,7 +17,7 @@ const cardVariants = {
 
 export default function Research() {
   return (
-    <section id="research" className="section section-alt">
+    <section id="research" className="section">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

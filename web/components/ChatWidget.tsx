@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { API_BASE } from "@/lib/config";
+import { profile } from "@/lib/content";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { role: "user" | "assistant"; content: string; error?: boolean };
+type Health = "checking" | "online" | "offline";
 
 const STARTERS = [
   "What did Varun build at SAP?",
@@ -12,101 +14,222 @@ const STARTERS = [
   "What are his strongest skills?",
 ];
 
+/**
+ * Backoff between retries, in ms. The backend runs on a Render free instance
+ * whose cold start routinely takes 30–60s, so the wait has to be able to outlast
+ * that — a single fixed 4s retry gives up roughly 26 seconds too early.
+ */
+const RETRY_BACKOFF_MS = [3000, 6000, 10000, 15000, 20000];
+/** Hard ceiling on the whole ask, retries included. */
+const RETRY_BUDGET_MS = 60000;
+
+type StreamHandlers = {
+  /** Replaces the trailing assistant message wholesale. */
+  setAssistant: (content: string, error?: boolean) => void;
+  /** Appends a token to the trailing assistant message. */
+  appendAssistant: (token: string) => void;
+  setHealth: (health: Health) => void;
+};
+
+/**
+ * Streams one answer into the trailing (placeholder) assistant message,
+ * retrying with growing backoff while the backend cold-starts. The caller must
+ * have already appended the user message and an empty assistant message.
+ *
+ * Lives outside the component so it never runs as render-phase code.
+ */
+async function streamAnswer(q: string, h: StreamHandlers) {
+  const startedAt = Date.now();
+  // True once any token has landed on screen. Nothing after that point may
+  // overwrite the partial answer with a status or error string.
+  let streamed = false;
+
+  async function attempt(): Promise<boolean> {
+    const res = await fetch(`${API_BASE}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: q }),
+    });
+    if (!res.ok || !res.body) throw new Error("bad response");
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let got = false;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const events = buffer.split("\n\n");
+      buffer = events.pop() ?? "";
+      for (const evt of events) {
+        const line = evt.replace(/^data:\s*/, "").trim();
+        if (!line) continue;
+        let data: { token?: string; error?: string };
+        try {
+          data = JSON.parse(line);
+        } catch {
+          // A single malformed frame must not tear down the read loop and throw
+          // away tokens that already arrived. Skip it and keep reading.
+          continue;
+        }
+        if (data.token) {
+          if (!got) h.setAssistant("");
+          got = true;
+          streamed = true;
+          h.appendAssistant(data.token);
+        } else if (data.error) {
+          throw new Error(data.error);
+        }
+      }
+    }
+    return got;
+  }
+
+  /** Waits `ms`, keeping the elapsed-time counter in the wake message live. */
+  function waitAndTick(ms: number) {
+    return new Promise<void>((resolve) => {
+      const tick = () => {
+        const secs = Math.round((Date.now() - startedAt) / 1000);
+        h.setAssistant(
+          `Waking up the server… ${secs}s elapsed. A free-tier cold start can take up to a minute.`
+        );
+      };
+      tick();
+      const ticker = setInterval(tick, 1000);
+      setTimeout(() => {
+        clearInterval(ticker);
+        resolve();
+      }, ms);
+    });
+  }
+
+  for (let i = 0; ; i++) {
+    try {
+      const got = await attempt();
+      // A completed stream that produced zero tokens is a failure, not a
+      // success: without this the "•••" placeholder would stand forever.
+      if (!got) throw new Error("empty");
+      h.setHealth("online");
+      return;
+    } catch {
+      // Something already reached the user — keep it rather than replacing a
+      // real (if truncated) answer with a status message.
+      if (streamed) return;
+    }
+
+    if (i >= RETRY_BACKOFF_MS.length) break;
+    const delay = RETRY_BACKOFF_MS[i];
+    if (Date.now() - startedAt + delay >= RETRY_BUDGET_MS) break;
+    await waitAndTick(delay);
+  }
+
+  h.setHealth("offline");
+  h.setAssistant("Sorry — I couldn't answer that right now.", true);
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [health, setHealth] = useState<Health>("checking");
   const bodyRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const lastQuestion = useRef("");
+  const wasOpen = useRef(false);
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, open]);
 
+  // Probe the backend when the panel opens: warms the cold start *and* tells us
+  // what to put in the header instead of an unconditional "Online".
   useEffect(() => {
     if (!open) return;
+    let cancelled = false;
     fetch(`${API_BASE}/api/event?event_type=chat_open`, { method: "POST" }).catch(() => {});
-    fetch(`${API_BASE}/health`).catch(() => {});
+    fetch(`${API_BASE}/health`)
+      .then((res) => { if (!cancelled) setHealth(res.ok ? "online" : "offline"); })
+      .catch(() => { if (!cancelled) setHealth("offline"); });
+    return () => { cancelled = true; };
   }, [open]);
 
-  async function send(question: string) {
-    const q = question.trim();
-    if (!q || streaming) return;
+  // Dialog behaviour: focus the input on open, Escape closes, focus returns to
+  // the launcher on close.
+  useEffect(() => {
+    if (!open) return;
+    inputRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
-    fetch(`${API_BASE}/api/event?event_type=question_asked&detail=${encodeURIComponent(q)}`, { method: "POST" }).catch(() => {});
-    setInput("");
-    setMessages((m) => [...m, { role: "user", content: q }, { role: "assistant", content: "" }]);
+  useEffect(() => {
+    if (wasOpen.current && !open) launcherRef.current?.focus();
+    wasOpen.current = open;
+  }, [open]);
+
+  const setAssistant = (content: string, error = false) =>
+    setMessages((m) => {
+      const copy = [...m];
+      copy[copy.length - 1] = { role: "assistant", content, error };
+      return copy;
+    });
+  const appendAssistant = (token: string) =>
+    setMessages((m) => {
+      const copy = [...m];
+      copy[copy.length - 1] = { role: "assistant", content: copy[copy.length - 1].content + token };
+      return copy;
+    });
+
+  async function run(q: string) {
     setStreaming(true);
-
-    const setAssistant = (content: string) =>
-      setMessages((m) => {
-        const copy = [...m];
-        copy[copy.length - 1] = { role: "assistant", content };
-        return copy;
-      });
-    const appendAssistant = (token: string) =>
-      setMessages((m) => {
-        const copy = [...m];
-        copy[copy.length - 1] = { role: "assistant", content: copy[copy.length - 1].content + token };
-        return copy;
-      });
-
-    async function attempt(): Promise<boolean> {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q }),
-      });
-      if (!res.ok || !res.body) throw new Error("bad response");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let got = false;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const events = buffer.split("\n\n");
-        buffer = events.pop() ?? "";
-        for (const evt of events) {
-          const line = evt.replace(/^data:\s*/, "").trim();
-          if (!line) continue;
-          const data = JSON.parse(line);
-          if (data.token) {
-            if (!got) setAssistant("");
-            got = true;
-            appendAssistant(data.token);
-          } else if (data.error) {
-            throw new Error(data.error);
-          }
-        }
-      }
-      return got;
-    }
-
     try {
-      await attempt();
-    } catch {
-      setAssistant("Waking up the server… one moment.");
-      await new Promise((r) => setTimeout(r, 4000));
-      try {
-        const ok = await attempt();
-        if (!ok) throw new Error("empty");
-      } catch {
-        setAssistant("Sorry — I couldn't answer that right now. Please email varunsg118@gmail.com.");
-      }
+      await streamAnswer(q, { setAssistant, appendAssistant, setHealth });
     } finally {
       setStreaming(false);
     }
   }
 
+  function send(question: string) {
+    const q = question.trim();
+    if (!q || streaming) return;
+
+    fetch(`${API_BASE}/api/event?event_type=question_asked&detail=${encodeURIComponent(q)}`, { method: "POST" }).catch(() => {});
+    lastQuestion.current = q;
+    setInput("");
+    setMessages((m) => [...m, { role: "user", content: q }, { role: "assistant", content: "" }]);
+    void run(q);
+  }
+
+  /** Re-asks the last question in place, reusing its existing bubbles. */
+  function retry() {
+    const q = lastQuestion.current;
+    if (!q || streaming) return;
+    setAssistant("");
+    void run(q);
+  }
+
+  const healthLabel =
+    health === "online"
+      ? "Online · RAG-powered"
+      : health === "offline"
+        ? "Waking up · first reply may be slow"
+        : "Connecting… · RAG-powered";
+
   return (
     <>
       <button
+        ref={launcherRef}
         className={`chat-launcher${open ? " open" : ""}`}
         aria-label={open ? "Close chat" : "Ask about Varun"}
+        aria-expanded={open}
+        aria-controls="chat-panel"
         onClick={() => setOpen((o) => !o)}
       >
         <i className={`fas ${open ? "fa-xmark" : "fa-comment-dots"}`}></i>
@@ -114,15 +237,27 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="chat-panel">
+        <div
+          className="chat-panel"
+          id="chat-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="chat-panel-title"
+        >
           <div className="chat-header">
             <div className="chat-header-left">
               <div className="chat-avatar">
                 <i className="fas fa-bolt"></i>
               </div>
               <div className="chat-header-text">
-                <strong>Ask about Varun</strong>
-                <span>Online · RAG-powered</span>
+                <strong id="chat-panel-title">Ask about Varun</strong>
+                <span>
+                  <span
+                    className={`status-dot${health === "online" ? "" : health === "offline" ? " is-offline" : " is-checking"}`}
+                    aria-hidden="true"
+                  ></span>
+                  {healthLabel}
+                </span>
               </div>
             </div>
             <button aria-label="Close" onClick={() => setOpen(false)}>
@@ -130,7 +265,7 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          <div className="chat-body" ref={bodyRef}>
+          <div className="chat-body" ref={bodyRef} role="log" aria-live="polite">
             {messages.length === 0 && (
               <div className="chat-intro">
                 <div className="chat-intro-msg">
@@ -152,7 +287,17 @@ export default function ChatWidget() {
             )}
             {messages.map((m, i) => (
               <div key={i} className={`chat-msg chat-msg-${m.role}`}>
-                {m.content || <span className="chat-typing">•••</span>}
+                {m.content || (m.error ? null : <span className="chat-typing">•••</span>)}
+                {m.error && (
+                  <div className="chat-msg-actions">
+                    <button type="button" onClick={retry} disabled={streaming}>
+                      <i className="fas fa-rotate-right"></i> Retry
+                    </button>
+                    <a href={`mailto:${profile.email}`}>
+                      <i className="fas fa-envelope"></i> {profile.email}
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -162,9 +307,11 @@ export default function ChatWidget() {
             onSubmit={(e) => { e.preventDefault(); send(input); }}
           >
             <input
+              ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask anything about Varun…"
+              aria-label="Ask anything about Varun"
               maxLength={1000}
               disabled={streaming}
             />
