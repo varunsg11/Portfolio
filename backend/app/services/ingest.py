@@ -36,10 +36,11 @@ def _structured_chunks() -> list[tuple[str, str]]:
         (
             "profile",
             "Varun Sadashive Gowda is an Agentic AI Developer with 3+ years building "
-            "multi-agent AI systems and enterprise automation at SAP Labs. He is an "
-            "incoming Master of Computer Science student at Texas A&M University "
-            "(Fall 2026), seeking Summer 2027 internships in AI, ML, and software "
-            "engineering. Contact: varunsg118@gmail.com, linkedin.com/in/varuns11.",
+            "multi-agent AI systems and enterprise automation at SAP Labs. He is a "
+            "Master of Computer Science student at Texas A&M University, on campus in "
+            "College Station, Texas since Fall 2026, seeking Summer 2027 internships in "
+            "AI, ML, and software engineering. He is based in College Station, Texas. "
+            "Contact: varunsg118@gmail.com, +1 979 326 4622, linkedin.com/in/varuns11.",
         )
     )
 
@@ -92,8 +93,9 @@ def _structured_chunks() -> list[tuple[str, str]]:
     chunks.append(
         (
             "education",
-            "Education: Master of Computer Science (MCS) at Texas A&M University, "
-            "incoming Fall 2026. B.E. in Electronics and Communication Engineering "
+            "Education: Master of Computer Science (MCS) at Texas A&M University in "
+            "College Station, Texas, started Fall 2026. B.E. in Electronics and "
+            "Communication Engineering "
             "from JSS Science and Technology University, India (2019–2023), CGPA "
             "8.94/10, coursework in Computer Networks, Operating Systems, and "
             "Cryptography & Network Security.",

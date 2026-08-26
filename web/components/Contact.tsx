@@ -68,8 +68,8 @@ export default function Contact() {
             transition={{ duration: 0.5, ease, delay: 0.05 }}
           >
             <p>
-              Incoming TAMU MCS student open to Summer 2027 internships in AI,
-              ML, and software engineering. Drop a message — I&apos;d love to connect.
+              TAMU MCS student in College Station, open to Summer 2027 internships
+              in AI, ML, and software engineering. Drop a message. I&apos;d love to connect.
             </p>
             <div className="contact-links">
               <a href={`mailto:${profile.email}`}>
@@ -84,6 +84,9 @@ export default function Contact() {
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-linkedin-in"></i> linkedin.com/in/varuns11
               </a>
+              <span>
+                <i className="fas fa-location-dot"></i> {profile.location}
+              </span>
             </div>
             <a href={profile.resumeUrl} className="btn btn-primary resume-btn" target="_blank" rel="noopener noreferrer">
               <i className="fas fa-download"></i> Download Resume
@@ -121,7 +124,9 @@ export default function Contact() {
               <i className="fas fa-paper-plane"></i>
             </button>
             {status.type && (
-              <div className={`form-status ${status.type}`}>{status.message}</div>
+              <div className={`form-status ${status.type}`} role="status">
+                {status.message}
+              </div>
             )}
           </motion.form>
         </div>

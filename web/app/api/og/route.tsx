@@ -25,7 +25,7 @@ export async function GET() {
           Agentic AI Developer
         </div>
         <div style={{ fontSize: 22, color: "#888888", marginTop: 14 }}>
-          Incoming MCS · Texas A&M · ex-SAP Labs
+          MCS · Texas A&M · College Station, TX · ex-SAP Labs
         </div>
       </div>
     ),

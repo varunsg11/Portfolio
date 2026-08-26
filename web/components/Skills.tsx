@@ -63,7 +63,7 @@ function SkillCard({ skill }: { skill: Skill }) {
 
 export default function Skills() {
   return (
-    <section id="about" className="section">
+    <section id="skills" className="section">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

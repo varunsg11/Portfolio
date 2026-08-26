@@ -19,9 +19,12 @@ import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
 
 export default function Home() {
-  // Record a page view (best-effort; ignored if analytics isn't configured).
+  // Record a page view and wake the free-tier backend as early as possible, so a
+  // cold start burns down while the visitor reads instead of while they wait.
+  // Both are best-effort: failures are ignored.
   useEffect(() => {
     fetch(`${API_BASE}/api/event?event_type=page_view`, { method: "POST" }).catch(() => {});
+    fetch(`${API_BASE}/health`).catch(() => {});
   }, []);
 
   return (
@@ -29,16 +32,16 @@ export default function Home() {
       <Preloader />
       <ScrollProgress />
       <Header />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero />
         <Marquee />
         <Bio />
         <Skills />
         <Experience />
+        <Education />
         <Certifications />
         <Research />
         <Projects />
-        <Education />
         <Contact />
       </main>
       <Footer />

@@ -45,8 +45,10 @@ AVAILABILITY = {
     "status": "Seeking Summer 2027 internships",
     "roles": ["AI", "ML", "Software Engineering"],
     "start": "Summer 2027",
-    "context": "Incoming MCS student at Texas A&M University (Fall 2026).",
+    "context": "MCS student at Texas A&M University, based in College Station, Texas (started Fall 2026).",
+    "location": "College Station, Texas",
     "contact": "varunsg118@gmail.com",
+    "phone": "+1 979 326 4622",
 }
 
 

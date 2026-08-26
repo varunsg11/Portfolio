@@ -12,7 +12,7 @@ export const profile = {
   lastName: "Sadashive Gowda",
   logo: "vsg.",
   status:
-    "Incoming MCS Student · Texas A&M University · Seeking Summer 2027 Internships",
+    "MCS Student · Texas A&M University · College Station, TX · Seeking Summer 2027 Internships",
   tagline:
     "AI Developer with 3+ years building agentic AI systems and enterprise automation. Previously at SAP Labs, now bringing that experience to grad school and industry opportunities.",
   roles: [
@@ -25,19 +25,23 @@ export const profile = {
   ],
   email: "varunsg118@gmail.com",
   eduEmail: "varunsg11@tamu.edu",
-  phone: "+91 84312 62742",
+  phone: "+1 979 326 4622",
+  location: "College Station, Texas",
   linkedin: "https://www.linkedin.com/in/varuns11/",
   github: "https://github.com/varunsg11",
-  resumeUrl: "https://portfolio-9s06.onrender.com/resume",
+  // Served straight off the CDN from web/public — a static file can't cold-start
+  // the way the free-tier backend does, and this is the highest-intent click.
+  resumeUrl: "/Varun_SadashiveGowda_Resume.pdf",
   metaDescription:
-    "Varun Sadashive Gowda — Incoming MCS student at Texas A&M, Agentic AI Developer with 3+ years building multi-agent systems and enterprise AI. Seeking Summer 2027 internships.",
+    "Varun Sadashive Gowda — MCS student at Texas A&M in College Station, TX, Agentic AI Developer with 3+ years building multi-agent systems and enterprise AI. Seeking Summer 2027 internships.",
 } as const;
 
 export const navLinks = [
-  { href: "#about", label: "About" },
+  { href: "#bio", label: "About" },
   { href: "#experience", label: "Experience" },
   { href: "#research", label: "Research" },
   { href: "#projects", label: "Projects" },
+  { href: "#education", label: "Education" },
   { href: "#contact", label: "Contact" },
 ] as const;
 
@@ -227,12 +231,12 @@ export type Education = {
 export const education: Education[] = [
   {
     degree: "Master of Computer Science (MCS)",
-    school: "Texas A&M University",
-    meta: "Fall 2026",
+    school: "Texas A&M University · College Station, TX",
+    meta: "Fall 2026 – Present",
     note: "Seeking Summer 2027 internships in AI / ML / Software Engineering",
     icon: "fas fa-graduation-cap",
     featured: true,
-    badge: "Incoming",
+    badge: "Current",
   },
   {
     degree: "B.E. – Electronics and Communication Engineering",

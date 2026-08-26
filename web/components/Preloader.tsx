@@ -19,7 +19,7 @@ export default function Preloader() {
   }, []);
 
   return (
-    <div id="preloader" className={hidden ? "hidden" : ""}>
+    <div id="preloader" className={hidden ? "hidden" : ""} aria-hidden="true">
       <div className="preloader-terminal">
         <div className="preloader-scanlines" />
 
