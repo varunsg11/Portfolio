@@ -6,6 +6,8 @@ import Preloader from "@/components/Preloader";
 import ScrollProgress from "@/components/ScrollProgress";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SmoothScroll from "@/components/SmoothScroll";
+import { ParallaxComponent } from "@/components/ui/parallax-scrolling";
 import Marquee from "@/components/Marquee";
 import Bio from "@/components/Bio";
 import Skills from "@/components/Skills";
@@ -42,11 +44,13 @@ export default function Home() {
 
   return (
     <>
+      <SmoothScroll />
       <Preloader />
       <ScrollProgress />
       <Header />
       <main id="main" tabIndex={-1}>
         <Hero />
+        <ParallaxComponent />
         <Marquee />
         <Bio />
         <Skills />

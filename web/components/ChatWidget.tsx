@@ -169,6 +169,13 @@ export default function ChatWidget() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
+  // Other sections can open the assistant with `vsg-open-chat`.
+  useEffect(() => {
+    const openChat = () => setOpen(true);
+    window.addEventListener("vsg-open-chat", openChat);
+    return () => window.removeEventListener("vsg-open-chat", openChat);
+  }, []);
+
   useEffect(() => {
     if (wasOpen.current && !open) launcherRef.current?.focus();
     wasOpen.current = open;
@@ -265,7 +272,7 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          <div className="chat-body" ref={bodyRef} role="log" aria-live="polite">
+          <div className="chat-body" ref={bodyRef} data-lenis-prevent role="log" aria-live="polite">
             {messages.length === 0 && (
               <div className="chat-intro">
                 <div className="chat-intro-msg">

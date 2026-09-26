@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import Typewriter from "./Typewriter";
-import MatrixRain from "./MatrixRain";
+import { CrowdCanvas } from "./ui/skiper39";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -17,9 +17,7 @@ export default function Hero() {
   return (
     <section id="home" className="hero">
       <div className="hero-bg">
-        <MatrixRain />
-        <div className="hero-grid"></div>
-        <div className="hero-glow"></div>
+        <div className="hero-horizon"></div>
       </div>
 
       {/* top bar: status + socials */}
@@ -74,13 +72,15 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* bottom bar: scroll cue */}
+      {/* the night crowd, walking the ember horizon */}
       <motion.div
-        className="hero-footer"
+        className="hero-crowd"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
+        transition={{ duration: 1.2, ease, delay: 0.5 }}
       >
+        <CrowdCanvas src="/art/open-peeps.png" fill="#ece6dc" ink="#0a0a0a" className="hero-crowd-canvas" />
+        <div className="hero-ground" aria-hidden="true"></div>
         <a href="#bio" className="hero-scroll">
           <span className="hero-scroll-line"></span>
           Scroll
