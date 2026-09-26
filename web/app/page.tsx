@@ -21,9 +21,22 @@ import ChatWidget from "@/components/ChatWidget";
 export default function Home() {
   // Record a page view and wake the free-tier backend as early as possible, so a
   // cold start burns down while the visitor reads instead of while they wait.
-  // Both are best-effort: failures are ignored.
+  // Both are best-effort: failures are ignored. An anonymous random ID persisted
+  // in localStorage lets the backend count unique visitors, not just page loads.
   useEffect(() => {
-    fetch(`${API_BASE}/api/event?event_type=page_view`, { method: "POST" }).catch(() => {});
+    let vid = "";
+    try {
+      vid = localStorage.getItem("vid") ?? "";
+      if (!vid) {
+        vid = crypto.randomUUID();
+        localStorage.setItem("vid", vid);
+      }
+    } catch {
+      // Storage blocked (private mode etc.) — still record the page view.
+    }
+    fetch(`${API_BASE}/api/event?event_type=page_view&detail=${encodeURIComponent(vid)}`, {
+      method: "POST",
+    }).catch(() => {});
     fetch(`${API_BASE}/health`).catch(() => {});
   }, []);
 

@@ -1,6 +1,7 @@
 """Lightweight analytics: record events and summarize them."""
 
 import logging
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Header, HTTPException
 from sqlalchemy import func, select
@@ -52,6 +53,15 @@ async def analytics(authorization: str = Header(default="")):
                 select(func.count()).select_from(PageEvent).where(PageEvent.event_type == evt)
             ) or 0
 
+        def count_visitors(since: datetime | None = None) -> int:
+            # page_view events carry the browser's anonymous visitor ID in `detail`.
+            q = select(func.count(func.distinct(PageEvent.detail))).where(
+                PageEvent.event_type == "page_view", PageEvent.detail != ""
+            )
+            if since is not None:
+                q = q.where(PageEvent.created_at >= since)
+            return db.scalar(q) or 0
+
         recent = list(
             db.scalars(select(ChatLog.question).order_by(ChatLog.id.desc()).limit(10)).all()
         )
@@ -59,6 +69,8 @@ async def analytics(authorization: str = Header(default="")):
             contact_submissions=db.scalar(select(func.count()).select_from(ContactSubmission)) or 0,
             chat_turns=db.scalar(select(func.count()).select_from(ChatLog)) or 0,
             page_views=count_events("page_view"),
+            unique_visitors=count_visitors(),
+            unique_visitors_7d=count_visitors(datetime.now(timezone.utc) - timedelta(days=7)),
             chat_opens=count_events("chat_open"),
             recent_questions=recent,
         )
