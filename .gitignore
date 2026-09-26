@@ -18,3 +18,7 @@ web/.next/
 web/out/
 web/.env.local
 web/next-env.d.ts
+# Impeccable (machine-local)
+.claude/settings.local.json
+.impeccable/config.local.json
+.impeccable/hook.cache.json

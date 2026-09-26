@@ -208,15 +208,20 @@ body::before {
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 36px;
+  gap: 24px;
+}
+/* Seven nowrap links only just fit above the 640px hamburger breakpoint. */
+@media (max-width: 720px) {
+  .nav-links { gap: 16px; }
 }
 .nav-links a {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
   transition: var(--transition);
   padding-bottom: 2px;
   border-bottom: 1.5px solid transparent;

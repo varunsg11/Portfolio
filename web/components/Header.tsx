@@ -11,17 +11,58 @@ export default function Header() {
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const sections = document.querySelectorAll<HTMLElement>("section[id]");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive("#" + entry.target.id);
-        });
-      },
-      { threshold: 0.4 }
-    );
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
+    const navIds = navLinks.map((l) => l.href.slice(1));
+
+    const computeActive = () => {
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("section[id]")
+      );
+      if (sections.length === 0) return;
+
+      // A horizontal line 30% down the viewport acts as the reading position.
+      const line = window.innerHeight * 0.3;
+
+      // Pick the last section whose top has scrolled above the line — i.e. the
+      // one currently occupying the reading position. This is deterministic and
+      // always follows scroll order.
+      let currentIndex = -1;
+      sections.forEach((s, i) => {
+        if (s.getBoundingClientRect().top <= line) currentIndex = i;
+      });
+
+      // If we're at the very bottom, force the last section active (short final
+      // sections may never reach the line otherwise).
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      if (atBottom) currentIndex = sections.length - 1;
+
+      // Map the current section to the nearest nav item at or above it, so
+      // sections that aren't nav targets (e.g. intro) fall under the right one.
+      while (currentIndex >= 0 && !navIds.includes(sections[currentIndex].id)) {
+        currentIndex -= 1;
+      }
+
+      setActive(currentIndex >= 0 ? "#" + sections[currentIndex].id : "");
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        computeActive();
+        ticking = false;
+      });
+    };
+
+    computeActive();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   // The mobile menu is a fullscreen overlay; stop the page behind it scrolling.
