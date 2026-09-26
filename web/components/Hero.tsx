@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import Typewriter from "./Typewriter";
-import { CrowdCanvas } from "./ui/skiper39";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -72,15 +71,13 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* the night crowd, walking the ember horizon */}
+      {/* bottom bar: scroll cue on the ember horizon */}
       <motion.div
-        className="hero-crowd"
+        className="hero-footer"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease, delay: 0.5 }}
+        transition={{ duration: 0.6, delay: 0.7 }}
       >
-        <CrowdCanvas src="/art/open-peeps.png" fill="#ece6dc" ink="#0a0a0a" className="hero-crowd-canvas" />
-        <div className="hero-ground" aria-hidden="true"></div>
         <a href="#bio" className="hero-scroll">
           <span className="hero-scroll-line"></span>
           Scroll

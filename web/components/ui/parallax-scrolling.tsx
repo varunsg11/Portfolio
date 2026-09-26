@@ -138,7 +138,10 @@ export function ParallaxComponent() {
             </svg>
 
             <div data-parallax-layer="3" className="parallax__layer-title">
-              <h2 id="parallax-title" className="parallax__title">Grounded.</h2>
+              <hgroup className="parallax__title-group">
+                <h2 id="parallax-title" className="parallax__title">V_Clanker</h2>
+                <p className="parallax__subtitle">Tells you about Varun</p>
+              </hgroup>
             </div>
 
             <svg data-parallax-layer="4" className="parallax__layer-img" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -176,15 +179,15 @@ export function ParallaxComponent() {
           <span aria-hidden="true">→</span> retrieve <span aria-hidden="true">→</span> answer
         </p>
         <p className="parallax__lede">
-          Everything on this page is also the assistant&rsquo;s memory. It answers only from that record, and
-          says so when the record doesn&rsquo;t cover a question.
+          V_Clanker is the assistant on this page, and everything here is its memory. It answers only from
+          that record, and says so when the record doesn&rsquo;t cover a question.
         </p>
         <button
           type="button"
           className="btn btn-primary"
           onClick={() => window.dispatchEvent(new CustomEvent("vsg-open-chat"))}
         >
-          Ask the assistant
+          Ask V_Clanker
         </button>
       </section>
     </div>

@@ -18,9 +18,7 @@ export default function Footer() {
         <div className="footer-meta">
           <p>&copy; 2026 {profile.name}</p>
           <p className="footer-credit">
-            Crowd by <a href="https://skiper-ui.com" target="_blank" rel="noopener noreferrer">Skiper UI</a> with{" "}
-            <a href="https://www.openpeeps.com/" target="_blank" rel="noopener noreferrer">Open Peeps</a>
-            {" · "}parallax after <a href="https://www.osmo.supply/" target="_blank" rel="noopener noreferrer">Osmo</a>
+            Parallax after <a href="https://www.osmo.supply/" target="_blank" rel="noopener noreferrer">Osmo</a>
           </p>
         </div>
         <div className="footer-socials">

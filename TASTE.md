@@ -36,11 +36,12 @@ the motion.
 4. **The visitor drives the motion.** Prefer motion scrubbed to scroll
    position over timed entrances. Allow at most one authored moment per
    section. Lenis and GSAP ScrollTrigger are already wired site-wide.
-5. **Scale contrast.** One huge word per scene ("Grounded.") against quiet,
+5. **Scale contrast.** One huge word per scene ("V_Clanker") against quiet,
    exact body text.
-6. **Human warmth against the machine.** Keep the playful voice, the joke
-   roles and the peeps. The machine parts stay serious; the people parts
-   stay fun.
+6. **Human warmth against the machine.** Keep the playful voice and the
+   joke roles (and a chatbot called V_Clanker). The machine parts stay
+   serious; the people parts stay fun. Keep the page still where it's
+   meant to be read: no ambient motion loops behind text.
 7. **Prove, don't claim.** Every visual must show the real system (the
    pipeline, the record, the assistant). Invent nothing.
 8. **A calm path.** Under `prefers-reduced-motion`, every scene still reads
@@ -48,14 +49,16 @@ the motion.
 
 ## Already built on `feature/scroll-animation`
 
-- **Night crowd hero:** Skiper UI's crowd canvas (`web/components/ui/skiper39.tsx`),
-  recoloured to bone on graphite, with back rows shaded into the dark. The
-  crowd walks an ember horizon line.
-- **"Grounded." parallax bridge:** Osmo's layered parallax
+- **Ember horizon hero:** the matrix rain is replaced by a still ember glow
+  on the horizon at the foot of the hero, which leads straight into the
+  black hole below. (A walking crowd was tried here and removed: the hero
+  stays still.)
+- **"V_Clanker" parallax bridge:** Osmo's layered parallax
   (`web/components/ui/parallax-scrolling.tsx`), with layers I drew from the
   CODING poster: a star field, an event horizon with an ember disk, the
-  title, and this site's real RAG pipeline streaming into the horizon. It
-  ends in an "Ask the assistant" button.
+  title "V_Clanker / Tells you about Varun" introducing the chatbot, and
+  this site's real RAG pipeline streaming into the horizon. It ends in an
+  "Ask V_Clanker" button that opens the chat.
 - **Lenis smooth scroll site-wide** (`web/components/SmoothScroll.tsx`). It
   handles in-page anchor links (including focus), respects the mobile-menu
   scroll lock, and turns off under reduced motion.
@@ -94,7 +97,7 @@ web/lib/content.ts.
 *Source: https://pin.it/5G2QRAGhK (a brain built from thousands of triangle particles)*
 
 ```
-/impeccable overdrive the "Ask the assistant" block (web/components/ui/parallax-scrolling.tsx .parallax__content)
+/impeccable overdrive the "Ask V_Clanker" block (web/components/ui/parallax-scrolling.tsx .parallax__content)
 Taking from the Dala particle brain: turn the assistant's knowledge base into
 a visible particle field on canvas. One particle per chunk of the real
 content (derive the counts from web/lib/content.ts sections: Experience,
@@ -151,9 +154,9 @@ every fact comes from web/lib/content.ts.
 ```
 /impeccable craft the Contact section as the page's closing scene (web/components/Contact.tsx)
 Taking from the EOSAI frame: end the page at dusk. A tall monolith doorway
-stands on still, reflective water, with one Open Peep (from
-/art/open-peeps.png, as a bone silhouette) at the threshold and its
-reflection below. The ember orbit ring from the "Grounded." black hole
+stands on still, reflective water, with one small, still bone silhouette
+of a figure at the threshold and its reflection below (no walking
+figures). The ember orbit ring from the V_Clanker black hole
 returns here as a thin ring behind the doorway, so the page opens and closes
 on the same light. The headline is set light, with one word in ember. The
 form sits on the water like a plate, keeping every current field, the
@@ -174,7 +177,7 @@ Taking from the CODING poster: give the site a type voice of its own. The
 current display face (Space Grotesk) and body face (Inter) are the
 category's defaults. Choose a display grotesk with real character for
 headings, and a pixel face used exactly once, for the giant parallax title
-"Grounded.", the way the poster uses it for "CODING". Self-host both through
+"V_Clanker", the way the poster uses it for "CODING". Self-host both through
 next/font, keep body text highly readable, check every breakpoint for
 overflow (the hero name is long), and keep all copy unchanged. Follow
 TASTE.md ("Ember at night"). Single ember light, bone on graphite. No new
@@ -189,7 +192,5 @@ DESIGN.md, and `/impeccable polish`.
 
 ## Credits
 
-Crowd canvas: [Skiper UI](https://skiper-ui.com) (Skiper39, free tier, so
-attribution is required) with illustrations from
-[Open Peeps](https://www.openpeeps.com/) (CC0). Parallax layers structure:
-[Osmo](https://www.osmo.supply/). Both are credited in the site footer.
+Parallax layers structure: [Osmo](https://www.osmo.supply/), credited in
+the site footer.
