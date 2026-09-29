@@ -36,8 +36,8 @@ export default function Typewriter({ roles }: { roles: readonly string[] }) {
       timer = setTimeout(loop, delay);
     }
 
-    // Start after the preloader + hero fade-in, matching the original 2s delay.
-    timer = setTimeout(loop, 2000);
+    // Start once the preloader has lifted and the hero has faded in.
+    timer = setTimeout(loop, 3800);
     return () => clearTimeout(timer);
   }, [roles]);
 

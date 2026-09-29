@@ -7,8 +7,18 @@ architecture.html
 debug.html
 .venv
 
+# Secrets: env files and keys anywhere (the .example templates stay tracked)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
 # Internal / local-only docs (not published)
 DEPLOYMENT.md
+PRODUCT.md
+TASTE.md
+Inspiration/
 web/AGENTS.md
 web/CLAUDE.md
 
@@ -18,7 +28,15 @@ web/.next/
 web/out/
 web/.env.local
 web/next-env.d.ts
-# Impeccable (machine-local)
-.claude/settings.local.json
-.impeccable/config.local.json
-.impeccable/hook.cache.json
+web/*.tsbuildinfo
+.vercel
+
+# Logs
+*.log
+
+# Local AI tooling (machine-local: sessions, worktrees, installed agents)
+.claude/
+.impeccable/
+.github/agents/
+.github/hooks/
+.github/skills/
