@@ -296,8 +296,10 @@ body.nav-open { overflow: hidden; }
   margin: 0 auto;
 }
 .hero-inner {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  align-items: center;
+  gap: 48px;
   padding: 60px 0 40px;
 }
 
@@ -368,7 +370,7 @@ body.nav-open { overflow: hidden; }
 }
 .hero-inner h1 {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  font-size: clamp(3.2rem, 6.4vw, 5.6rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 0.95;
@@ -410,6 +412,122 @@ body.nav-open { overflow: hidden; }
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+/* hero right column: V_Clanker, the site's assistant, as a pixel bot */
+.hero-right {
+  display: flex;
+  justify-content: center;
+}
+.hero-agent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.hero-agent:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 10px;
+}
+.hero-agent .pixel-bot { transition: transform var(--transition); }
+.hero-agent .pixel-bot svg { transition: filter var(--transition); }
+.hero-agent:hover .pixel-bot,
+.hero-agent:focus-visible .pixel-bot { transform: translateY(-6px); }
+.hero-agent:hover .pixel-bot svg,
+.hero-agent:focus-visible .pixel-bot svg,
+.hero-agent.is-thinking .pixel-bot svg {
+  filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.28));
+}
+.hero-agent:hover .px-E,
+.hero-agent.is-thinking .px-E { fill: #fb923c; }
+
+/* square-cornered, offset-shadow bubble to match the pixel art */
+.hero-agent-bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  max-width: 260px;
+  padding: 12px 16px;
+  text-align: left;
+  background: rgba(14, 14, 14, 0.92);
+  border: 2px solid rgba(249, 115, 22, 0.45);
+  box-shadow: 5px 5px 0 rgba(249, 115, 22, 0.14);
+  transition: border-color var(--transition);
+}
+.hero-agent-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background: rgba(14, 14, 14, 0.92);
+  border-right: 2px solid rgba(249, 115, 22, 0.45);
+  border-bottom: 2px solid rgba(249, 115, 22, 0.45);
+  transform: rotate(45deg);
+}
+.hero-agent:hover .hero-agent-bubble { border-color: rgba(249, 115, 22, 0.8); }
+.hero-agent-bubble strong {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.hero-agent-bubble span {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.hero-agent-floor {
+  width: 220px;
+  height: 22px;
+  margin-top: -30px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(249, 115, 22, 0.28), transparent 70%);
+  pointer-events: none;
+}
+
+.pixel-bot {
+  position: relative;
+  display: block;
+}
+.pixel-bot svg,
+.pixel-bot-head { display: block; }
+.pixel-bot-screen {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  background: #050505;
+}
+
+/* V_Clanker's answering signal (components/ThinkingWave.tsx) */
+.thinking-wave {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #000;
+}
+.thinking-wave-still {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
 }
 
 /* hero right panel card */
@@ -1369,6 +1487,8 @@ footer .footer-credit { font-size: 0.7rem; }
     grid-template-columns: 1fr;
     gap: 40px;
   }
+  .hero-right { justify-content: flex-start; }
+  .hero-agent { zoom: 0.8; }
 }
 @media (max-width: 860px) {
   .bio-layout { grid-template-columns: 1fr; gap: 32px; }
@@ -1431,18 +1551,15 @@ footer .footer-credit { font-size: 0.7rem; }
   line-height: 1;
   cursor: pointer;
   box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease,
+    opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
 }
-.chat-launcher::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-  flex-shrink: 0;
-  animation: pulse 2s ease-in-out infinite;
+/* Hidden while the hero's own V_Clanker is on screen (see ChatWidget). */
+.chat-launcher.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  pointer-events: none;
 }
 .chat-launcher:hover {
   border-color: rgba(249, 115, 22, 0.7);
@@ -1457,14 +1574,12 @@ footer .footer-credit { font-size: 0.7rem; }
   border-color: rgba(255, 255, 255, 0.1);
   background: rgba(22, 22, 22, 0.9);
 }
-.chat-launcher.open::before { display: none; }
 .chat-launcher i { font-size: 1rem; color: var(--accent); }
 .chat-launcher.open i { color: var(--text-muted); }
 .chat-launcher-label { color: var(--text); letter-spacing: 0.01em; }
 
 @media (max-width: 640px) {
   .chat-launcher { width: 52px; height: 52px; padding: 0; justify-content: center; bottom: 20px; right: 20px; }
-  .chat-launcher::before { display: none; }
   .chat-launcher-label { display: none; }
 }
 
@@ -1641,11 +1756,14 @@ footer .footer-credit { font-size: 0.7rem; }
   color: var(--text-sub);
   border-bottom-left-radius: 3px;
 }
-.chat-typing {
-  letter-spacing: 3px;
-  color: var(--accent);
-  animation: blink 1s step-end infinite;
+.chat-thinking {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
+.chat-thinking .thinking-wave { border-radius: 6px; }
 /* Recovery affordances on a failed answer: retry, or fall back to email. */
 .chat-msg-actions {
   display: flex;

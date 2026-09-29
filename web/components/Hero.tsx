@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import Typewriter from "./Typewriter";
+import HeroAgent from "./HeroAgent";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -67,6 +68,11 @@ export default function Hero() {
                 </a>
               </motion.div>
             </div>
+
+            {/* right column: the assistant, in person */}
+            <motion.div className="hero-right" {...fadeUp(0.45)}>
+              <HeroAgent />
+            </motion.div>
           </div>
         </div>
       </div>

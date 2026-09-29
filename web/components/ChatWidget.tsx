@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { API_BASE } from "@/lib/config";
 import { profile } from "@/lib/content";
+import { PixelBotHead } from "./PixelBot";
+import ThinkingWave from "./ThinkingWave";
 
-type Message = { role: "user" | "assistant"; content: string; error?: boolean };
+/** `status` marks a placeholder line (e.g. the cold-start notice), not answer text. */
+type Message = { role: "user" | "assistant"; content: string; error?: boolean; status?: boolean };
 type Health = "checking" | "online" | "offline";
 
 const STARTERS = [
@@ -26,6 +29,8 @@ const RETRY_BUDGET_MS = 60000;
 type StreamHandlers = {
   /** Replaces the trailing assistant message wholesale. */
   setAssistant: (content: string, error?: boolean) => void;
+  /** Shows a progress line in the trailing assistant message until tokens arrive. */
+  setStatus: (content: string) => void;
   /** Appends a token to the trailing assistant message. */
   appendAssistant: (token: string) => void;
   setHealth: (health: Health) => void;
@@ -92,7 +97,7 @@ async function streamAnswer(q: string, h: StreamHandlers) {
     return new Promise<void>((resolve) => {
       const tick = () => {
         const secs = Math.round((Date.now() - startedAt) / 1000);
-        h.setAssistant(
+        h.setStatus(
           `Waking up the server… ${secs}s elapsed. A free-tier cold start can take up to a minute.`
         );
       };
@@ -138,8 +143,10 @@ export default function ChatWidget() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
   const lastQuestion = useRef("");
   const wasOpen = useRef(false);
+  const [heroInView, setHeroInView] = useState(true);
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: "smooth" });
@@ -155,6 +162,17 @@ export default function ChatWidget() {
       .then((res) => { if (!cancelled) setHealth(res.ok ? "online" : "offline"); })
       .catch(() => { if (!cancelled) setHealth("offline"); });
     return () => { cancelled = true; };
+  }, [open]);
+
+  // Remember what opened the panel (the launcher or the hero's V_Clanker) so
+  // focus can go back there on close. Must run before the input steals focus.
+  useEffect(() => {
+    if (!wasOpen.current && open) openerRef.current = document.activeElement as HTMLElement | null;
+    if (wasOpen.current && !open) {
+      const opener = openerRef.current;
+      (opener?.isConnected && opener.offsetParent !== null ? opener : launcherRef.current)?.focus();
+    }
+    wasOpen.current = open;
   }, [open]);
 
   // Dialog behaviour: focus the input on open, Escape closes, focus returns to
@@ -176,15 +194,31 @@ export default function ChatWidget() {
     return () => window.removeEventListener("vsg-open-chat", openChat);
   }, []);
 
+  // The hero's V_Clanker mirrors what the assistant is doing.
   useEffect(() => {
-    if (wasOpen.current && !open) launcherRef.current?.focus();
-    wasOpen.current = open;
-  }, [open]);
+    window.dispatchEvent(new CustomEvent("vsg-chat-state", { detail: { open, thinking: streaming } }));
+  }, [open, streaming]);
+
+  // While the hero is on screen, its V_Clanker is the way in; the floating
+  // launcher only takes over once the visitor scrolls past it.
+  useEffect(() => {
+    const hero = document.getElementById("home");
+    if (!hero) return;
+    const io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
 
   const setAssistant = (content: string, error = false) =>
     setMessages((m) => {
       const copy = [...m];
       copy[copy.length - 1] = { role: "assistant", content, error };
+      return copy;
+    });
+  const setStatus = (content: string) =>
+    setMessages((m) => {
+      const copy = [...m];
+      copy[copy.length - 1] = { role: "assistant", content, status: true };
       return copy;
     });
   const appendAssistant = (token: string) =>
@@ -197,7 +231,7 @@ export default function ChatWidget() {
   async function run(q: string) {
     setStreaming(true);
     try {
-      await streamAnswer(q, { setAssistant, appendAssistant, setHealth });
+      await streamAnswer(q, { setAssistant, setStatus, appendAssistant, setHealth });
     } finally {
       setStreaming(false);
     }
@@ -233,14 +267,14 @@ export default function ChatWidget() {
     <>
       <button
         ref={launcherRef}
-        className={`chat-launcher${open ? " open" : ""}`}
-        aria-label={open ? "Close chat" : "Ask about Varun"}
+        className={`chat-launcher${open ? " open" : ""}${heroInView && !open ? " is-hidden" : ""}`}
+        aria-label={open ? "Close chat" : "Ask V_Clanker about Varun"}
         aria-expanded={open}
         aria-controls="chat-panel"
         onClick={() => setOpen((o) => !o)}
       >
-        <i className={`fas ${open ? "fa-xmark" : "fa-comment-dots"}`}></i>
-        {!open && <span className="chat-launcher-label">Ask about Varun</span>}
+        {open ? <i className="fas fa-xmark"></i> : <PixelBotHead size={24} />}
+        {!open && <span className="chat-launcher-label">Ask V_Clanker</span>}
       </button>
 
       {open && (
@@ -254,10 +288,10 @@ export default function ChatWidget() {
           <div className="chat-header">
             <div className="chat-header-left">
               <div className="chat-avatar">
-                <i className="fas fa-bolt"></i>
+                <PixelBotHead size={26} />
               </div>
               <div className="chat-header-text">
-                <strong id="chat-panel-title">Ask about Varun</strong>
+                <strong id="chat-panel-title">V_Clanker</strong>
                 <span>
                   <span
                     className={`status-dot${health === "online" ? "" : health === "offline" ? " is-offline" : " is-checking"}`}
@@ -277,10 +311,10 @@ export default function ChatWidget() {
               <div className="chat-intro">
                 <div className="chat-intro-msg">
                   <div className="chat-intro-icon">
-                    <i className="fas fa-bolt"></i>
+                    <PixelBotHead size={24} />
                   </div>
                   <p>
-                    Hi! I can answer questions about Varun&apos;s experience, skills, and background. Try one:
+                    Hi, I&apos;m V_Clanker. I can answer questions about Varun&apos;s experience, skills, and background. Try one:
                   </p>
                 </div>
                 <div className="chat-starters">
@@ -294,7 +328,14 @@ export default function ChatWidget() {
             )}
             {messages.map((m, i) => (
               <div key={i} className={`chat-msg chat-msg-${m.role}`}>
-                {m.content || (m.error ? null : <span className="chat-typing">•••</span>)}
+                {m.role === "assistant" && !m.error && (m.status || !m.content) ? (
+                  <span className="chat-thinking">
+                    <ThinkingWave width={84} height={26} />
+                    <span>{m.status ? m.content : "V_Clanker is thinking…"}</span>
+                  </span>
+                ) : (
+                  m.content
+                )}
                 {m.error && (
                   <div className="chat-msg-actions">
                     <button type="button" onClick={retry} disabled={streaming}>
