@@ -110,12 +110,8 @@ export default function Hero() {
       </div>
       <EmberHorizon trigger="#home" flight={FLIGHT} className="hero-scene" onReady={() => setSceneReady(true)} />
 
-      {/* top bar: status + socials */}
+      {/* top bar: socials */}
       <div className="hero-topbar">
-        <motion.div className="hero-status" {...fadeUp(0.1)}>
-          <span className="status-dot" aria-hidden="true"></span>
-          {profile.status}
-        </motion.div>
         <motion.div className="hero-socials" {...fadeUp(0.15)}>
           <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <i className="fab fa-linkedin-in"></i>

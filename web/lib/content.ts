@@ -38,13 +38,13 @@ export const profile = {
 
 /**
  * Headline numbers revealed at sunrise in the hero's scroll flight. Each is
- * taken from the experience entries below; keep them in step.
+ * taken from the experience and research entries below; keep them in step.
  */
 export const highlights = [
   { value: 3, suffix: "+", label: "years shipping AI and enterprise systems" },
   { value: 600, suffix: "+", label: "critical SAP incidents resolved" },
   { value: 30, suffix: "%", label: "less support effort with multi-agent workflows" },
-  { value: 67, suffix: "%", label: "smaller Docker images, 6\u00a0GB → 2\u00a0GB" },
+  { value: 2, suffix: "", label: "IEEE-published research papers" },
 ] as const;
 
 export const navLinks = [

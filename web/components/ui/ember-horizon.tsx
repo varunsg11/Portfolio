@@ -247,12 +247,16 @@ export function EmberHorizon({ trigger, flight, onReady, className }: EmberHoriz
     const look = new THREE.Vector3();
     const ease = (t: number) => t * t * (3 - 2 * t);
 
+    // In portrait the sun would end up behind the stacked stats, so it only
+    // half-rises there, sitting on the horizon below them.
+    let sunTo = SUN.to;
+
     function place(p: number) {
       const e = ease(p);
       camera.position.set(0, FROM.y + (TO.y - FROM.y) * e, FROM.z + (TO.z - FROM.z) * e);
       look.set(0, FROM.lookY + (TO.lookY - FROM.lookY) * e, -900);
       camera.lookAt(look);
-      sun.position.y = SUN.from + (SUN.to - SUN.from) * e;
+      sun.position.y = SUN.from + (sunTo - SUN.from) * e;
       sunMat.uniforms.strength.value = 0.85 + e * 0.35;
       skyMat.uniforms.glow.value = e;
       starMat.opacity = 0.9 * (1 - 0.75 * e);
@@ -266,6 +270,7 @@ export function EmberHorizon({ trigger, flight, onReady, className }: EmberHoriz
       bloom.resolution.set(w / 2, h / 2);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      sunTo = camera.aspect < 0.9 ? -10 : SUN.to;
     }
 
     // Render on demand: ease toward the scroll target, stop when there.
