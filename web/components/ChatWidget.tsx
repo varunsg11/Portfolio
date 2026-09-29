@@ -326,13 +326,20 @@ export default function ChatWidget() {
                 </div>
               </div>
             )}
-            {messages.map((m, i) => (
-              <div key={i} className={`chat-msg chat-msg-${m.role}`}>
-                {m.role === "assistant" && !m.error && (m.status || !m.content) ? (
-                  <span className="chat-thinking">
-                    <ThinkingWave width={84} height={26} />
-                    <span>{m.status ? m.content : "V_Clanker is thinking…"}</span>
-                  </span>
+            {messages.map((m, i) => {
+              const thinking = m.role === "assistant" && !m.error && (m.status || !m.content);
+              return (
+              <div key={i} className={`chat-msg chat-msg-${m.role}${thinking ? " is-thinking" : ""}`}>
+                {thinking ? (
+                  <>
+                    <ThinkingWave width={96} height={30} />
+                    {/* The cold-start notice is worth reading; the plain wait is not. */}
+                    {m.status ? (
+                      <span className="chat-thinking-status">{m.content}</span>
+                    ) : (
+                      <span className="sr-only">V_Clanker is thinking…</span>
+                    )}
+                  </>
                 ) : (
                   m.content
                 )}
@@ -347,7 +354,8 @@ export default function ChatWidget() {
                   </div>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <form
