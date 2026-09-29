@@ -332,7 +332,7 @@ export default function ChatWidget() {
               <div key={i} className={`chat-msg chat-msg-${m.role}${thinking ? " is-thinking" : ""}`}>
                 {thinking ? (
                   <>
-                    <ThinkingWave width={96} height={30} />
+                    <ThinkingWave width={240} height={72} />
                     {/* The cold-start notice is worth reading; the plain wait is not. */}
                     {m.status ? (
                       <span className="chat-thinking-status">{m.content}</span>

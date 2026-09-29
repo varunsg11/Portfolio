@@ -265,8 +265,10 @@ export interface SiriWaveProps
   extends Omit<React.HTMLAttributes<HTMLCanvasElement>, "children"> {
   /** Which shader to render. */
   variant?: SiriWaveVariant
-  /** CSS display size of the square canvas, in px. */
+  /** CSS display width of the canvas, in px (and its height, unless `height` is set). */
   size?: number
+  /** CSS display height, in px, for a non-square canvas. Defaults to `size`. */
+  height?: number
   /** Internal render resolution multiplier (lower = cheaper/blurrier). */
   renderScale?: number
 }
@@ -274,6 +276,7 @@ export interface SiriWaveProps
 export function SiriWave({
   variant = "wave",
   size = 420,
+  height = size,
   renderScale = 0.75,
   className,
   style,
@@ -328,10 +331,11 @@ export function SiriWave({
     const uResolution = gl.getUniformLocation(program, "iResolution")
     const uTime = gl.getUniformLocation(program, "iTime")
 
-    const dim = Math.round(size * renderScale)
-    canvas.width = dim
-    canvas.height = dim
-    gl.viewport(0, 0, dim, dim)
+    const w = Math.round(size * renderScale)
+    const h = Math.round(height * renderScale)
+    canvas.width = w
+    canvas.height = h
+    gl.viewport(0, 0, w, h)
 
     const start =
       typeof performance !== "undefined" ? performance.now() : Date.now()
@@ -340,7 +344,7 @@ export function SiriWave({
       const now =
         typeof performance !== "undefined" ? performance.now() : Date.now()
       const t = (now - start) / 1000
-      gl.uniform2f(uResolution, dim, dim)
+      gl.uniform2f(uResolution, w, h)
       gl.uniform1f(uTime, t)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       raf = requestAnimationFrame(frame)
@@ -354,13 +358,13 @@ export function SiriWave({
       gl.deleteShader(fs)
       gl.deleteBuffer(buffer)
     }
-  }, [variant, size, renderScale])
+  }, [variant, size, height, renderScale])
 
   return (
     <canvas
       ref={canvasRef}
       className={cn("block rounded-[20px] bg-black", className)}
-      style={{ width: size, height: size, ...style }}
+      style={{ width: size, height, ...style }}
       {...props}
     />
   )

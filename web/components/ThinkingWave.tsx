@@ -4,9 +4,8 @@ import { useReducedMotion } from "framer-motion";
 import { SiriWave } from "@/components/ui/siri-wave";
 
 /**
- * V_Clanker's "working on an answer" signal: the Siri wave shader, cropped
- * from its square canvas to a wide strip. The wave lives in the vertical
- * middle of the square, so cropping top and bottom keeps all of it. Under
+ * V_Clanker's "working on an answer" signal: the Siri wave shader on a wide
+ * canvas, so the wave runs the full strip and tapers off at both ends. Under
  * reduced motion it becomes a still ember line.
  */
 export default function ThinkingWave({ width, height }: { width: number; height: number }) {
@@ -16,13 +15,7 @@ export default function ThinkingWave({ width, height }: { width: number; height:
       {reduce ? (
         <span className="thinking-wave-still" />
       ) : (
-        <SiriWave
-          variant="wave"
-          size={width}
-          renderScale={1}
-          className="rounded-none"
-          style={{ marginTop: (height - width) / 2 }}
-        />
+        <SiriWave variant="wave" size={width} height={height} renderScale={2} className="rounded-none" />
       )}
     </span>
   );
