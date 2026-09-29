@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { profile } from "@/lib/content";
+import { highlights, profile } from "@/lib/content";
 import Typewriter from "./Typewriter";
 import HeroAgent from "./HeroAgent";
 
@@ -18,7 +18,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 export const INTRO = 3;
 
 /** How long the hero stays pinned for the camera flight, in viewport heights. */
-const FLIGHT = 0.8;
+const FLIGHT = 1.2;
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -57,18 +57,48 @@ function RisingText({ text, start }: { text: string; start: number }) {
 export default function Hero() {
   const [sceneReady, setSceneReady] = useState(false);
 
-  // The copy sinks and fades while the camera takes off, clearing the sky
-  // before About rises over the last frame.
+  // One timeline over the pinned flight (0 → 1): the copy sinks and fades as
+  // the camera takes off, then at sunrise the numbers rise into the light,
+  // counting up and warming from graphite to lit white as the scroll goes.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
-      gsap.to([".hero-topbar", ".hero-body", ".hero-scroll"], {
-        y: 140,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: { trigger: "#home", start: "top top", end: `+=${FLIGHT * 80}%`, scrub: true },
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: "#home", start: "top top", end: `+=${FLIGHT * 100}%`, scrub: true },
       });
+      tl.to([".hero-topbar", ".hero-body", ".hero-scroll"], { y: 140, opacity: 0, duration: 0.38 }, 0);
+      tl.fromTo(".hero-dawn", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0.42);
+      gsap.utils.toArray<HTMLElement>(".dawn-stat").forEach((stat, i) => {
+        const at = 0.45 + i * 0.07;
+        const num = stat.querySelector<HTMLElement>(".dawn-value")!;
+        const value = Number(num.dataset.value);
+        const suffix = num.dataset.suffix ?? "";
+        const count = { v: 0 };
+        num.textContent = `0${suffix}`;
+        tl.fromTo(stat, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 0.16, ease: "power2.out" }, at);
+        tl.to(
+          count,
+          {
+            v: value,
+            duration: 0.24,
+            ease: "power1.out",
+            onUpdate: () => {
+              num.textContent = `${Math.round(count.v)}${suffix}`;
+            },
+          },
+          at,
+        );
+        tl.fromTo(
+          num,
+          { color: "#3d3d3d", textShadow: "0 0 0px rgba(249, 115, 22, 0)" },
+          { color: "#f5f5f5", textShadow: "0 0 32px rgba(249, 115, 22, 0.55)", duration: 0.24 },
+          at + 0.04,
+        );
+      });
+      // Span the whole pin so positions above read as fractions of it.
+      tl.set({}, {}, 1);
     });
     return () => ctx.revert();
   }, []);
@@ -139,6 +169,28 @@ export default function Hero() {
             </motion.div>
           </div>
         </div>
+      </div>
+
+      {/* sunrise: the numbers, revealed by the flight (hidden until then) */}
+      <div className="hero-dawn">
+        <p className="dawn-eyebrow">The story so far</p>
+        <dl className="dawn-stats">
+          {highlights.map((h) => (
+            <div className="dawn-stat" key={h.label}>
+              <dt>{h.label}</dt>
+              <dd>
+                <span className="dawn-value" data-value={h.value} data-suffix={h.suffix} aria-hidden="true">
+                  {h.value}
+                  {h.suffix}
+                </span>
+                <span className="sr-only">
+                  {h.value}
+                  {h.suffix}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
       {/* bottom bar: scroll cue on the ember horizon */}

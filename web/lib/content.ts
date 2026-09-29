@@ -36,6 +36,17 @@ export const profile = {
     "Varun Sadashive Gowda — MCS student at Texas A&M in College Station, TX, Agentic AI Developer with 3+ years building multi-agent systems and enterprise AI. Seeking Summer 2027 internships.",
 } as const;
 
+/**
+ * Headline numbers revealed at sunrise in the hero's scroll flight. Each is
+ * taken from the experience entries below; keep them in step.
+ */
+export const highlights = [
+  { value: 3, suffix: "+", label: "years shipping AI and enterprise systems" },
+  { value: 600, suffix: "+", label: "critical SAP incidents resolved" },
+  { value: 30, suffix: "%", label: "less support effort with multi-agent workflows" },
+  { value: 67, suffix: "%", label: "smaller Docker images, 6\u00a0GB → 2\u00a0GB" },
+] as const;
+
 export const navLinks = [
   { href: "#bio", label: "About" },
   { href: "#experience", label: "Experience" },
